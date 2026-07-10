@@ -8,77 +8,54 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
         body { background: #f0f2f5; }
-        
         .login-container { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: linear-gradient(135deg, #1a73e8, #0d47a1); }
         .login-box { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); width: 400px; max-width: 90%; text-align: center; }
         .login-box h1 { font-size: 24px; margin-bottom: 5px; color: #333; }
         .login-box p { color: #666; margin-bottom: 25px; font-size: 14px; }
         .login-box .form-group { margin-bottom: 20px; text-align: left; }
         .login-box label { display: block; margin-bottom: 5px; font-weight: bold; color: #333; }
-        .login-box input { width: 100%; padding: 12px 15px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; transition: border 0.3s; }
+        .login-box input { width: 100%; padding: 12px 15px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; }
         .login-box input:focus { border-color: #1a73e8; outline: none; }
-        .login-box .btn-login { width: 100%; padding: 14px; background: #1a73e8; color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; transition: background 0.3s; }
+        .login-box .btn-login { width: 100%; padding: 14px; background: #1a73e8; color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; }
         .login-box .btn-login:hover { background: #1557b0; }
         .login-error { color: #dc3545; margin-top: 10px; display: none; font-weight: bold; }
-        
         #mainSystem { display: none; }
         .header { background: #1a73e8; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
         .header h1 { font-size: 20px; }
         .header .logout-btn { background: #dc3545; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
-        .header .logout-btn:hover { background: #c82333; }
-        
         .nav { display: flex; gap: 10px; background: white; padding: 10px 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); flex-wrap: wrap; }
         .nav button { padding: 10px 20px; border: none; background: #e8f0fe; color: #1a73e8; cursor: pointer; border-radius: 5px; font-size: 14px; }
         .nav button.active { background: #1a73e8; color: white; }
-        .nav button:hover { opacity: 0.8; }
-        
         .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
         .page { display: none; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .page.active { display: block; }
-        
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; }
-        th { background: #f8f9fa; color: #333; font-weight: bold; }
-        tr:hover { background: #f8f9fa; }
-        
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; color: #333; font-weight: bold; font-size: 14px; }
-        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; }
-        
-        .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; color: white; }
+        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; font-size: 13px; }
+        th { background: #f8f9fa; font-weight: bold; }
+        .btn { padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; color: white; }
         .btn-primary { background: #1a73e8; }
         .btn-success { background: #28a745; }
         .btn-danger { background: #dc3545; }
         .btn-warning { background: #ffc107; color: #333; }
         .btn-info { background: #17a2b8; }
-        .btn-group { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
-        
-        .badge { padding: 5px 10px; border-radius: 15px; font-size: 12px; font-weight: bold; }
+        .btn-group { display: flex; gap: 8px; margin: 15px 0; flex-wrap: wrap; }
+        .badge { padding: 3px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; }
         .badge-pinjam { background: #fff3cd; color: #856404; }
         .badge-kembali { background: #d4edda; color: #155724; }
         .badge-terlambat { background: #f8d7da; color: #721c24; }
-        
-        .alert { padding: 15px; border-radius: 5px; margin: 10px 0; display: none; font-weight: bold; }
+        .alert { padding: 12px; border-radius: 5px; margin: 10px 0; display: none; font-weight: bold; }
         .alert-success { background: #d4edda; color: #155724; }
         .alert-error { background: #f8d7da; color: #721c24; }
-        
+        .card { background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 15px 0; }
+        .form-group { margin-bottom: 10px; }
+        .form-group label { display: block; margin-bottom: 3px; font-weight: bold; font-size: 13px; }
+        .form-group input { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; }
+        .loading { text-align: center; padding: 20px; display: none; }
+        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #1a73e8; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 0 auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .scanner-ready { background: #d4edda; padding: 15px; border-radius: 10px; text-align: center; margin: 15px 0; border: 2px dashed #28a745; }
         .scanner-ready .blink { animation: blink 1s infinite; font-size: 20px; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-        
-        .card { background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 15px 0; }
-        
-        .loading { text-align: center; padding: 20px; display: none; }
-        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #1a73e8; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 10px; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        .barcode-cell { text-align: center; }
-        .barcode-cell .barcode-id { font-size: 11px; font-weight: bold; margin-top: 3px; color: #333; }
-
-        @media print {
-            .header, .nav, .btn, .form-group, .scanner-ready { display: none; }
-            table { font-size: 12px; }
-        }
     </style>
 </head>
 <body>
@@ -87,22 +64,13 @@
         <div class="login-box">
             <h1>SISTEM PERPUSTAKAAN</h1>
             <p>SMA Al-Aziz Bangil</p>
-            
-            <div class="form-group">
-                <label>Username</label>
-                <input type="text" id="username" placeholder="Masukkan username" autofocus>
-            </div>
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" id="password" placeholder="Masukkan password">
-            </div>
-            
+            <div class="form-group"><label>Username</label><input type="text" id="username" placeholder="Masukkan username" autofocus></div>
+            <div class="form-group"><label>Password</label><input type="password" id="password" placeholder="Masukkan password"></div>
             <button class="btn-login" onclick="login()">Masuk</button>
             <div class="login-error" id="loginError">Username atau password salah!</div>
         </div>
     </div>
 
-    
     <div id="mainSystem">
         <div class="header">
             <h1>SISTEM PERPUSTAKAAN SMA AL-AZIZ BANGIL</h1>
@@ -111,7 +79,6 @@
                 <button class="logout-btn" onclick="logout()">Logout</button>
             </div>
         </div>
-        
         <div class="nav">
             <button onclick="showPage('dashboard')" class="active" id="nav-dashboard">Dashboard</button>
             <button onclick="showPage('buku')" id="nav-buku">Data Buku</button>
@@ -119,30 +86,19 @@
             <button onclick="showPage('peminjaman')" id="nav-peminjaman">Peminjaman</button>
             <button onclick="showPage('scanner')" id="nav-scanner">Scan</button>
         </div>
-        
         <div class="container">
             <div class="loading" id="loading"><div class="spinner"></div><p>Memuat data...</p></div>
             
-           
             <div id="dashboard" class="page active">
                 <h2>Dashboard</h2>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 15px 0;">
-                    <div style="background: #e8f0fe; padding: 20px; border-radius: 10px; text-align: center;">
-                        <h3>Total Buku</h3><p style="font-size: 32px; font-weight: bold;" id="totalBuku">-</p>
-                    </div>
-                    <div style="background: #d4edda; padding: 20px; border-radius: 10px; text-align: center;">
-                        <h3>Total Anggota</h3><p style="font-size: 32px; font-weight: bold;" id="totalAnggota">-</p>
-                    </div>
-                    <div style="background: #fff3cd; padding: 20px; border-radius: 10px; text-align: center;">
-                        <h3>Sedang Dipinjam</h3><p style="font-size: 32px; font-weight: bold;" id="totalDipinjam">-</p>
-                    </div>
-                    <div style="background: #f8d7da; padding: 20px; border-radius: 10px; text-align: center;">
-                        <h3>Terlambat</h3><p style="font-size: 32px; font-weight: bold;" id="totalTerlambat">-</p>
-                    </div>
+                    <div style="background:#e8f0fe; padding:20px; border-radius:10px; text-align:center;"><h3>Total Buku</h3><p style="font-size:32px;font-weight:bold;" id="totalBuku">-</p></div>
+                    <div style="background:#d4edda; padding:20px; border-radius:10px; text-align:center;"><h3>Total Anggota</h3><p style="font-size:32px;font-weight:bold;" id="totalAnggota">-</p></div>
+                    <div style="background:#fff3cd; padding:20px; border-radius:10px; text-align:center;"><h3>Sedang Dipinjam</h3><p style="font-size:32px;font-weight:bold;" id="totalDipinjam">-</p></div>
+                    <div style="background:#f8d7da; padding:20px; border-radius:10px; text-align:center;"><h3>Terlambat</h3><p style="font-size:32px;font-weight:bold;" id="totalTerlambat">-</p></div>
                 </div>
                 <button class="btn btn-info" onclick="loadDashboard()">Refresh Data</button>
             </div>
-            
             
             <div id="buku" class="page">
                 <h2>Data Buku</h2>
@@ -150,7 +106,7 @@
                 <div class="btn-group">
                     <button class="btn btn-primary" onclick="showFormBuku()">+ Tambah Buku</button>
                     <button class="btn btn-warning" onclick="generateBarcodeAll()">Generate Barcode</button>
-                    <button class="btn btn-success" onclick="printBarcode('buku')">Print Barcode Buku</button>
+                    <button class="btn btn-success" onclick="printBarcode('buku')">Print Barcode</button>
                     <button class="btn btn-info" onclick="loadBuku()">Refresh</button>
                 </div>
                 <div id="formBuku" style="display:none;" class="card">
@@ -166,21 +122,15 @@
                         <button class="btn btn-danger" onclick="batalBuku()">Batal</button>
                     </div>
                 </div>
-                <div style="overflow-x: auto;">
-                    <table>
-                        <thead><tr><th>Barcode</th><th>ID</th><th>Judul</th><th>Pengarang</th><th>Penerbit</th><th>Tahun</th><th>Stok</th></tr></thead>
-                        <tbody id="tabelBuku"></tbody>
-                    </table>
-                </div>
+                <div style="overflow-x:auto;"><table><thead><tr><th>Barcode</th><th>ID</th><th>Judul</th><th>Pengarang</th><th>Penerbit</th><th>Tahun</th><th>Stok</th><th>Aksi</th></tr></thead><tbody id="tabelBuku"></tbody></table></div>
             </div>
             
-           
             <div id="anggota" class="page">
                 <h2>Data Anggota</h2>
                 <div id="alertAnggota" class="alert"></div>
                 <div class="btn-group">
                     <button class="btn btn-primary" onclick="showFormAnggota()">+ Tambah Anggota</button>
-                    <button class="btn btn-success" onclick="printBarcode('anggota')">Print Barcode Anggota</button>
+                    <button class="btn btn-success" onclick="printBarcode('anggota')">Print Barcode</button>
                     <button class="btn btn-info" onclick="loadAnggota()">Refresh</button>
                 </div>
                 <div id="formAnggota" style="display:none;" class="card">
@@ -194,44 +144,28 @@
                         <button class="btn btn-danger" onclick="batalAnggota()">Batal</button>
                     </div>
                 </div>
-                <div style="overflow-x: auto;">
-                    <table>
-                        <thead><tr><th>Barcode</th><th>ID</th><th>Nama</th><th>Kelas</th><th>No Telp</th></tr></thead>
-                        <tbody id="tabelAnggota"></tbody>
-                    </table>
-                </div>
+                <div style="overflow-x:auto;"><table><thead><tr><th>Barcode</th><th>ID</th><th>Nama</th><th>Kelas</th><th>No Telp</th><th>Aksi</th></tr></thead><tbody id="tabelAnggota"></tbody></table></div>
             </div>
-            
             
             <div id="peminjaman" class="page">
                 <h2>Transaksi Peminjaman</h2>
                 <div id="alertPinjam" class="alert"></div>
                 <button class="btn btn-info" onclick="loadTransaksi()">Refresh</button>
-                <div style="overflow-x: auto;">
-                    <table>
-                        <thead><tr><th>ID</th><th>Tgl Pinjam</th><th>Anggota</th><th>Buku</th><th>Tgl Kembali</th><th>Tgl Dikembalikan</th><th>Status</th><th>Aksi</th></tr></thead>
-                        <tbody id="tabelPinjam"></tbody>
-                    </table>
-                </div>
+                <div style="overflow-x:auto;"><table><thead><tr><th>ID</th><th>Tgl Pinjam</th><th>Anggota</th><th>Buku</th><th>Tgl Kembali</th><th>Tgl Dikembalikan</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="tabelPinjam"></tbody></table></div>
             </div>
             
-           
             <div id="scanner" class="page">
                 <h2>Scan Barcode (Scanner Fisik)</h2>
                 <div id="alertScan" class="alert"></div>
-                
                 <div class="card">
                     <h3>PEMINJAMAN</h3>
-                    <div class="scanner-ready"><p class="blink">SIAP SCAN</p><p>Arahkan scanner ke barcode</p></div>
+                    <div class="scanner-ready"><p class="blink">SIAP SCAN</p></div>
                     <div class="form-group"><label>Scan ID Anggota</label><input type="text" id="scanAnggota" placeholder="Scan kartu anggota..." autofocus></div>
                     <div class="form-group"><label>Scan ID Buku</label><input type="text" id="scanBuku" placeholder="Scan barcode buku..." disabled></div>
                     <div id="infoScan" style="display:none; background:#e8f0fe; padding:10px; border-radius:5px; margin:10px 0;"></div>
-                    <div class="btn-group">
-                        <button class="btn btn-success" id="btnPinjam" disabled onclick="prosesPinjamScan()">Pinjam</button>
-                        <button class="btn btn-danger" onclick="resetScan()">Reset</button>
-                    </div>
+                    <button class="btn btn-success" id="btnPinjam" disabled onclick="prosesPinjamScan()">Pinjam</button>
+                    <button class="btn btn-danger" onclick="resetScan()">Reset</button>
                 </div>
-                
                 <div class="card">
                     <h3>PENGEMBALIAN</h3>
                     <div class="form-group"><label>Scan ID Peminjaman</label><input type="text" id="scanKembali" placeholder="Scan ID peminjaman..."></div>
@@ -243,7 +177,7 @@
     </div>
 
     <script>
-        
+        // LOGIN CHECK
         if(sessionStorage.getItem('loggedIn') === 'true') {
             document.getElementById('loginPage').style.display = 'none';
             document.getElementById('mainSystem').style.display = 'block';
@@ -253,44 +187,45 @@
         }
         
         async function login() {
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    
-    if(!username || !password) {
-        document.getElementById('loginError').style.display = 'block';
-        document.getElementById('loginError').textContent = 'Username dan password wajib diisi!';
-        return;
-    }
-    
-    showLoading();
-    try {
-        const res = await callAPI('login', { username, password });
-        hideLoading();
-        
-        if(res.success) {
-            sessionStorage.setItem('loggedIn', 'true');
-            document.getElementById('loginPage').style.display = 'none';
-            document.getElementById('mainSystem').style.display = 'block';
-            document.getElementById('loginError').style.display = 'none';
-            loadDashboard();
-            updateClock();
-            setInterval(updateClock, 1000);
-        } else {
-            document.getElementById('loginError').style.display = 'block';
-            document.getElementById('loginError').textContent = res.message;
-            document.getElementById('password').value = '';
-            document.getElementById('password').focus();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            if(!username || !password) {
+                document.getElementById('loginError').style.display = 'block';
+                document.getElementById('loginError').textContent = 'Username dan password wajib diisi!';
+                return;
+            }
+            showLoading();
+            try {
+                const res = await callAPI('login', { username, password });
+                hideLoading();
+                if(res.success) {
+                    sessionStorage.setItem('loggedIn', 'true');
+                    document.getElementById('loginPage').style.display = 'none';
+                    document.getElementById('mainSystem').style.display = 'block';
+                    document.getElementById('loginError').style.display = 'none';
+                    loadDashboard();
+                    updateClock();
+                    setInterval(updateClock, 1000);
+                } else {
+                    document.getElementById('loginError').style.display = 'block';
+                    document.getElementById('loginError').textContent = res.message;
+                    document.getElementById('password').value = '';
+                    document.getElementById('password').focus();
+                }
+            } catch(e) {
+                hideLoading();
+                document.getElementById('loginError').style.display = 'block';
+                document.getElementById('loginError').textContent = 'Gagal menghubungkan ke server!';
+            }
         }
-    } catch(e) {
-        hideLoading();
-        document.getElementById('loginError').style.display = 'block';
-        document.getElementById('loginError').textContent = 'Gagal menghubungkan ke server!';
-    }
-}
+        
+        function logout() {
+            sessionStorage.removeItem('loggedIn');
+            window.location.href = 'https://perpussmaalaziz.github.io/perpus/';
+        }
         
         document.getElementById('password').addEventListener('keydown', function(e) { if(e.key === 'Enter') login(); });
         document.getElementById('username').addEventListener('keydown', function(e) { if(e.key === 'Enter') document.getElementById('password').focus(); });
-        
 
         const API_URL = 'https://script.google.com/macros/s/AKfycbyAMn8kDPZfSQ6HLq-aqs3DgQ9h2FiEwCZO1v7QeXLfhaIoEiY-JCEQvTCkeHsGzPp0/exec';
         let cacheBuku = [], cacheAnggota = [], cacheTransaksi = [];
@@ -315,21 +250,14 @@
             if(pageId === 'scanner') initScanner();
         }
         
-        function updateClock() {
-            const clockEl = document.getElementById('clock');
-            if(clockEl) clockEl.textContent = new Date().toLocaleString('id-ID');
-        }
-        
+        function updateClock() { const c = document.getElementById('clock'); if(c) c.textContent = new Date().toLocaleString('id-ID'); }
         function showLoading() { document.getElementById('loading').style.display = 'block'; }
         function hideLoading() { document.getElementById('loading').style.display = 'none'; }
         
-        // DASHBOARD
         async function loadDashboard() {
             showLoading();
             try {
-                const [bukuRes, anggotaRes, transaksiRes] = await Promise.all([
-                    callAPI('getBuku'), callAPI('getAnggota'), callAPI('getTransaksi')
-                ]);
+                const [bukuRes, anggotaRes, transaksiRes] = await Promise.all([callAPI('getBuku'), callAPI('getAnggota'), callAPI('getTransaksi')]);
                 if(bukuRes.success) cacheBuku = bukuRes.data;
                 if(anggotaRes.success) cacheAnggota = anggotaRes.data;
                 if(transaksiRes.success) cacheTransaksi = transaksiRes.data;
@@ -337,11 +265,11 @@
                 document.getElementById('totalAnggota').textContent = cacheAnggota.length;
                 document.getElementById('totalDipinjam').textContent = cacheTransaksi.filter(t => t['STATUS'] === 'Dipinjam').length;
                 document.getElementById('totalTerlambat').textContent = cacheTransaksi.filter(t => t['STATUS'] === 'Terlambat').length;
-            } catch(e) { console.error(e); }
+            } catch(e) {}
             hideLoading();
         }
         
-
+        // BUKU
         async function loadBuku() {
             showLoading();
             try { const res = await callAPI('getBuku'); if(res.success) { cacheBuku = res.data; renderBuku(); } } catch(e) {}
@@ -349,39 +277,64 @@
         }
         
         function renderBuku() {
-    const tbody = document.getElementById('tabelBuku');
-    tbody.innerHTML = cacheBuku.map((b, i) => {
-        const id = b['ID BUKU'] || b.id || '';
-        return `<tr>
-            <td>
-    <div style="display:flex; align-items:center; gap:10px;">
-        <svg id="bc-buku-${i}"></svg>
-        <button class="btn btn-success" style="padding:5px 10px; font-size:11px; white-space:nowrap;" onclick="downloadBarcode('bc-buku-${i}', '${id}')">Download</button>
-    </div>
-</td>
-            <td>${id}</td>
-            <td>${b['JUDUL BUKU'] || b.judul || ''}</td>
-            <td>${b['PENGARANG'] || b.pengarang || ''}</td>
-            <td>${b['PENERBIT'] || b.penerbit || ''}</td>
-            <td>${b['TAHUN'] || b.tahun || ''}</td>
-            <td><strong>${b['STOK'] || b.stok || 0}</strong></td>
-        </tr>`;
-    }).join('');
-    setTimeout(() => {
-        cacheBuku.forEach((b, i) => {
-            try {
-                const svg = document.getElementById(`bc-buku-${i}`);
+            document.getElementById('tabelBuku').innerHTML = cacheBuku.map((b, i) => {
                 const id = b['ID BUKU'] || b.id || '';
-                if(svg && id) JsBarcode(svg, id, {format: "CODE128", width: 2, height: 60, displayValue: true, fontSize: 14, margin: 10});
-            } catch(e) {}
-        });
-    }, 200);
-}
+                return `<tr>
+                    <td><div style="display:flex;align-items:center;gap:8px;"><svg id="bc-buku-${i}"></svg><button class="btn btn-success" style="font-size:10px;" onclick="downloadBarcode('bc-buku-${i}','${id}')">Download</button></div></td>
+                    <td>${id}</td><td>${b['JUDUL BUKU']||''}</td><td>${b['PENGARANG']||''}</td><td>${b['PENERBIT']||''}</td><td>${b['TAHUN']||''}</td><td><strong>${b['STOK']||0}</strong></td>
+                    <td><button class="btn btn-warning" style="font-size:10px;" onclick="editBuku('${id}')">Edit</button></td>
+                </tr>`;
+            }).join('');
+            setTimeout(() => cacheBuku.forEach((b, i) => {
+                try { const svg = document.getElementById(`bc-buku-${i}`); if(svg) JsBarcode(svg, b['ID BUKU']||b.id||'', {format:"CODE128",width:2,height:50,displayValue:true,fontSize:12,margin:8}); } catch(e) {}
+            }), 200);
+        }
         
-        function showFormBuku() { document.getElementById('formBuku').style.display = 'block'; }
+        function showFormBuku() {
+            document.getElementById('formBuku').style.display = 'block';
+            document.getElementById('editBukuId').value = '';
+            document.getElementById('idBuku').value = '';
+            document.getElementById('idBuku').disabled = false;
+            document.getElementById('judulBuku').value = '';
+            document.getElementById('pengarangBuku').value = '';
+            document.getElementById('penerbitBuku').value = '';
+            document.getElementById('tahunBuku').value = '';
+            document.getElementById('stokBuku').value = '1';
+        }
+        
+        function editBuku(id) {
+            const buku = cacheBuku.find(b => (b['ID BUKU']||b.id) === id);
+            if(!buku) return;
+            document.getElementById('formBuku').style.display = 'block';
+            document.getElementById('editBukuId').value = id;
+            document.getElementById('idBuku').value = id;
+            document.getElementById('idBuku').disabled = true;
+            document.getElementById('judulBuku').value = buku['JUDUL BUKU']||'';
+            document.getElementById('pengarangBuku').value = buku['PENGARANG']||'';
+            document.getElementById('penerbitBuku').value = buku['PENERBIT']||'';
+            document.getElementById('tahunBuku').value = buku['TAHUN']||'';
+            document.getElementById('stokBuku').value = buku['STOK']||1;
+            document.getElementById('formBuku').scrollIntoView({behavior:'smooth'});
+        }
+        
+        async function simpanBuku() {
+            const id = document.getElementById('idBuku').value;
+            const judul = document.getElementById('judulBuku').value;
+            if(!id || !judul) { showAlert('alertBuku','ID dan Judul wajib diisi!','error'); return; }
+            showLoading();
+            try {
+                const editId = document.getElementById('editBukuId').value;
+                const data = { idBuku:id, judul, pengarang:document.getElementById('pengarangBuku').value, penerbit:document.getElementById('penerbitBuku').value, tahun:document.getElementById('tahunBuku').value, stok:parseInt(document.getElementById('stokBuku').value) };
+                const res = await callAPI(editId ? 'editBuku' : 'tambahBuku', data);
+                hideLoading();
+                if(res.success) { showAlert('alertBuku',res.message,'success'); batalBuku(); loadBuku(); loadDashboard(); }
+                else { showAlert('alertBuku',res.message,'error'); }
+            } catch(e) { hideLoading(); showAlert('alertBuku','Gagal menyimpan!','error'); }
+        }
+        
         function batalBuku() { document.getElementById('formBuku').style.display = 'none'; }
-        async function simpanBuku() { alert('Untuk menambah/mengedit buku, silakan buka Google Spreadsheet langsung.'); batalBuku(); }
         
+        // ANGGOTA
         async function loadAnggota() {
             showLoading();
             try { const res = await callAPI('getAnggota'); if(res.success) { cacheAnggota = res.data; renderAnggota(); } } catch(e) {}
@@ -389,37 +342,60 @@
         }
         
         function renderAnggota() {
-    const tbody = document.getElementById('tabelAnggota');
-    tbody.innerHTML = cacheAnggota.map((a, i) => {
-        const id = a['ID ANGGOTA'] || a.id || '';
-        return `<tr>
-            <td>
-    <div style="display:flex; align-items:center; gap:10px;">
-        <svg id="bc-anggota-${i}"></svg>
-        <button class="btn btn-success" style="padding:5px 10px; font-size:11px; white-space:nowrap;" onclick="downloadBarcode('bc-anggota-${i}', '${id}')">Download</button>
-    </div>
-</td>
-            <td>${id}</td>
-            <td>${a['NAMA LENGKAP'] || a.nama || ''}</td>
-            <td>${a['KELAS/JURUSAN'] || a.kelas || ''}</td>
-            <td>${a['NO TELEPON'] || a.telp || ''}</td>
-        </tr>`;
-    }).join('');
-    setTimeout(() => {
-        cacheAnggota.forEach((a, i) => {
-            try {
-                const svg = document.getElementById(`bc-anggota-${i}`);
+            document.getElementById('tabelAnggota').innerHTML = cacheAnggota.map((a, i) => {
                 const id = a['ID ANGGOTA'] || a.id || '';
-                if(svg && id) JsBarcode(svg, id, {format: "CODE128", width: 2, height: 60, displayValue: true, fontSize: 14, margin: 10});
-            } catch(e) {}
-        });
-    }, 200);
-}
+                return `<tr>
+                    <td><div style="display:flex;align-items:center;gap:8px;"><svg id="bc-anggota-${i}"></svg><button class="btn btn-success" style="font-size:10px;" onclick="downloadBarcode('bc-anggota-${i}','${id}')">Download</button></div></td>
+                    <td>${id}</td><td>${a['NAMA LENGKAP']||''}</td><td>${a['KELAS/JURUSAN']||''}</td><td>${a['NO TELEPON']||''}</td>
+                    <td><button class="btn btn-warning" style="font-size:10px;" onclick="editAnggota('${id}')">Edit</button></td>
+                </tr>`;
+            }).join('');
+            setTimeout(() => cacheAnggota.forEach((a, i) => {
+                try { const svg = document.getElementById(`bc-anggota-${i}`); if(svg) JsBarcode(svg, a['ID ANGGOTA']||a.id||'', {format:"CODE128",width:2,height:50,displayValue:true,fontSize:12,margin:8}); } catch(e) {}
+            }), 200);
+        }
         
-        function showFormAnggota() { document.getElementById('formAnggota').style.display = 'block'; }
+        function showFormAnggota() {
+            document.getElementById('formAnggota').style.display = 'block';
+            document.getElementById('editAnggotaId').value = '';
+            document.getElementById('idAnggota').value = '';
+            document.getElementById('idAnggota').disabled = false;
+            document.getElementById('namaAnggota').value = '';
+            document.getElementById('kelasAnggota').value = '';
+            document.getElementById('telpAnggota').value = '';
+        }
+        
+        function editAnggota(id) {
+            const anggota = cacheAnggota.find(a => (a['ID ANGGOTA']||a.id) === id);
+            if(!anggota) return;
+            document.getElementById('formAnggota').style.display = 'block';
+            document.getElementById('editAnggotaId').value = id;
+            document.getElementById('idAnggota').value = id;
+            document.getElementById('idAnggota').disabled = true;
+            document.getElementById('namaAnggota').value = anggota['NAMA LENGKAP']||'';
+            document.getElementById('kelasAnggota').value = anggota['KELAS/JURUSAN']||'';
+            document.getElementById('telpAnggota').value = anggota['NO TELEPON']||'';
+            document.getElementById('formAnggota').scrollIntoView({behavior:'smooth'});
+        }
+        
+        async function simpanAnggota() {
+            const id = document.getElementById('idAnggota').value;
+            const nama = document.getElementById('namaAnggota').value;
+            if(!id || !nama) { showAlert('alertAnggota','ID dan Nama wajib diisi!','error'); return; }
+            showLoading();
+            try {
+                const editId = document.getElementById('editAnggotaId').value;
+                const data = { idAnggota:id, nama, kelas:document.getElementById('kelasAnggota').value, telp:document.getElementById('telpAnggota').value };
+                const res = await callAPI(editId ? 'editAnggota' : 'tambahAnggota', data);
+                hideLoading();
+                if(res.success) { showAlert('alertAnggota',res.message,'success'); batalAnggota(); loadAnggota(); loadDashboard(); }
+                else { showAlert('alertAnggota',res.message,'error'); }
+            } catch(e) { hideLoading(); showAlert('alertAnggota','Gagal menyimpan!','error'); }
+        }
+        
         function batalAnggota() { document.getElementById('formAnggota').style.display = 'none'; }
-        async function simpanAnggota() { alert('Untuk menambah/mengedit anggota, silakan buka Google Spreadsheet langsung.'); batalAnggota(); }
         
+        // TRANSAKSI
         async function loadTransaksi() {
             showLoading();
             try { const res = await callAPI('getTransaksi'); if(res.success) { cacheTransaksi = res.data; renderTransaksi(); } } catch(e) {}
@@ -427,187 +403,114 @@
         }
         
         function renderTransaksi() {
-            const tbody = document.getElementById('tabelPinjam');
-            tbody.innerHTML = cacheTransaksi.map(t => {
-                let statusClass = t['STATUS'] === 'Dikembalikan' ? 'badge-kembali' : (t['STATUS']?.includes('Terlambat') ? 'badge-terlambat' : 'badge-pinjam');
-                return `<tr>
-                    <td><strong>${t['ID PINJAM'] || ''}</strong></td>
-                    <td>${t['TANGGAL PINJAM'] || ''}</td>
-                    <td>${t['NAMA ANGGOTA'] || t['ID ANGGOTA'] || ''}</td>
-                    <td>${t['JUDUL BUKU'] || ''}</td>
-                    <td>${t['TANGGAL KEMBALI'] || ''}</td>
-                    <td>${t['TANGGAL DIKEMBALIKAN'] || '-'}</td>
-                    <td><span class="badge ${statusClass}">${t['STATUS'] || ''}</span></td>
-                    <td>${t['STATUS'] === 'Dipinjam' ? `<button class="btn btn-success" onclick="kembalikanTransaksi('${t['ID PINJAM']}')">Kembalikan</button>` : ''}</td>
-                </tr>`;
+            document.getElementById('tabelPinjam').innerHTML = cacheTransaksi.map(t => {
+                let sc = t['STATUS']==='Dikembalikan'?'badge-kembali':(t['STATUS']?.includes('Terlambat')?'badge-terlambat':'badge-pinjam');
+                return `<tr><td><strong>${t['ID PINJAM']||''}</strong></td><td>${t['TANGGAL PINJAM']||''}</td><td>${t['NAMA ANGGOTA']||''}</td><td>${t['JUDUL BUKU']||''}</td><td>${t['TANGGAL KEMBALI']||''}</td><td>${t['TANGGAL DIKEMBALIKAN']||'-'}</td><td><span class="badge ${sc}">${t['STATUS']||''}</span></td><td>${t['STATUS']==='Dipinjam'?`<button class="btn btn-success" onclick="kembalikanTransaksi('${t['ID PINJAM']}')">Kembalikan</button>`:''}</td></tr>`;
             }).join('');
         }
         
-        async function kembalikanTransaksi(idPinjam) {
+        async function kembalikanTransaksi(id) {
             if(!confirm('Konfirmasi pengembalian?')) return;
             showLoading();
             try {
-                const res = await callAPI('kembali', {idPinjam});
+                const res = await callAPI('kembali',{idPinjam:id});
                 hideLoading();
-                if(res.success) { showAlert('alertPinjam', res.message, 'success'); loadTransaksi(); loadDashboard(); }
-                else { showAlert('alertPinjam', res.message, 'error'); }
+                if(res.success){showAlert('alertPinjam',res.message,'success');loadTransaksi();loadDashboard();}
+                else{showAlert('alertPinjam',res.message,'error');}
             } catch(e) { hideLoading(); }
         }
         
+        // SCANNER
         function initScanner() {
             document.getElementById('scanAnggota').disabled = false;
             document.getElementById('scanAnggota').focus();
-            document.getElementById('scanAnggota').onkeydown = function(e) { if(e.key === 'Enter') { e.preventDefault(); const id = this.value.trim(); if(id) cekAnggotaScan(id); } };
-            document.getElementById('scanBuku').onkeydown = function(e) { if(e.key === 'Enter') { e.preventDefault(); const id = this.value.trim(); if(id) cekBukuScan(id); } };
-            document.getElementById('scanKembali').onkeydown = function(e) { if(e.key === 'Enter') { e.preventDefault(); const id = this.value.trim(); if(id) cekTransaksiScan(id); } };
+            document.getElementById('scanAnggota').onkeydown = function(e){if(e.key==='Enter'){e.preventDefault();const id=this.value.trim();if(id)cekAnggotaScan(id);}};
+            document.getElementById('scanBuku').onkeydown = function(e){if(e.key==='Enter'){e.preventDefault();const id=this.value.trim();if(id)cekBukuScan(id);}};
+            document.getElementById('scanKembali').onkeydown = function(e){if(e.key==='Enter'){e.preventDefault();const id=this.value.trim();if(id)cekTransaksiScan(id);}};
         }
         
-        async function cekAnggotaScan(id) {
-            showLoading(); await loadDashboard(); hideLoading();
-            const anggota = cacheAnggota.find(a => (a['ID ANGGOTA'] || a.id) === id);
-            if(anggota) {
-                scanAnggota = anggota;
-                document.getElementById('infoScan').innerHTML = `<strong>Anggota:</strong> ${anggota['NAMA LENGKAP'] || anggota.nama}<br><small>${anggota['KELAS/JURUSAN'] || ''}</small>`;
-                document.getElementById('infoScan').style.display = 'block';
-                document.getElementById('scanBuku').disabled = false;
-                document.getElementById('scanBuku').focus();
-            } else {
-                showAlert('alertScan', 'Anggota tidak ditemukan!', 'error');
-                document.getElementById('scanAnggota').value = '';
-                document.getElementById('scanAnggota').focus();
-            }
-        }
+        async function cekAnggotaScan(id){showLoading();await loadDashboard();hideLoading();const a=cacheAnggota.find(x=>(x['ID ANGGOTA']||x.id)===id);if(a){scanAnggota=a;document.getElementById('infoScan').innerHTML=`<strong>Anggota:</strong> ${a['NAMA LENGKAP']||a.nama}`;document.getElementById('infoScan').style.display='block';document.getElementById('scanBuku').disabled=false;document.getElementById('scanBuku').focus();}else{showAlert('alertScan','Anggota tidak ditemukan!','error');document.getElementById('scanAnggota').value='';document.getElementById('scanAnggota').focus();}}
+        async function cekBukuScan(id){showLoading();await loadDashboard();hideLoading();const b=cacheBuku.find(x=>(x['ID BUKU']||x.id)===id);if(b){if((b['STOK']||0)<=0){showAlert('alertScan','Stok habis!','error');document.getElementById('scanBuku').value='';document.getElementById('scanBuku').focus();return;}scanBuku=b;document.getElementById('infoScan').innerHTML+=`<br><strong>Buku:</strong> ${b['JUDUL BUKU']||b.judul}<br><small>Stok: ${b['STOK']||0}</small>`;document.getElementById('btnPinjam').disabled=false;document.getElementById('btnPinjam').focus();}else{showAlert('alertScan','Buku tidak ditemukan!','error');document.getElementById('scanBuku').value='';document.getElementById('scanBuku').focus();}}
+        async function cekTransaksiScan(id){showLoading();await loadDashboard();hideLoading();const t=cacheTransaksi.find(x=>x['ID PINJAM']===id&&x['STATUS']==='Dipinjam');if(t){scanTransaksi=t;document.getElementById('infoKembali').innerHTML=`<strong>ID:</strong> ${t['ID PINJAM']}<br><strong>Anggota:</strong> ${t['NAMA ANGGOTA']}<br><strong>Buku:</strong> ${t['JUDUL BUKU']}`;document.getElementById('infoKembali').style.display='block';document.getElementById('btnKembali').disabled=false;document.getElementById('btnKembali').focus();}else{showAlert('alertScan','Transaksi tidak ditemukan!','error');document.getElementById('scanKembali').value='';document.getElementById('scanKembali').focus();}}
         
-        async function cekBukuScan(id) {
-            showLoading(); await loadDashboard(); hideLoading();
-            const buku = cacheBuku.find(b => (b['ID BUKU'] || b.id) === id);
-            if(buku) {
-                if((buku['STOK'] || buku.stok || 0) <= 0) {
-                    showAlert('alertScan', 'Stok habis!', 'error');
-                    document.getElementById('scanBuku').value = '';
-                    document.getElementById('scanBuku').focus();
-                    return;
-                }
-                scanBuku = buku;
-                document.getElementById('infoScan').innerHTML += `<br><strong>Buku:</strong> ${buku['JUDUL BUKU'] || buku.judul}<br><small>Stok: ${buku['STOK'] || buku.stok}</small>`;
-                document.getElementById('btnPinjam').disabled = false;
-                document.getElementById('btnPinjam').focus();
-            } else {
-                showAlert('alertScan', 'Buku tidak ditemukan!', 'error');
-                document.getElementById('scanBuku').value = '';
-                document.getElementById('scanBuku').focus();
-            }
-        }
-        
-        async function cekTransaksiScan(id) {
-            showLoading(); await loadDashboard(); hideLoading();
-            const trx = cacheTransaksi.find(t => t['ID PINJAM'] === id && t['STATUS'] === 'Dipinjam');
-            if(trx) {
-                scanTransaksi = trx;
-                document.getElementById('infoKembali').innerHTML = `<strong>ID:</strong> ${trx['ID PINJAM']}<br><strong>Anggota:</strong> ${trx['NAMA ANGGOTA']}<br><strong>Buku:</strong> ${trx['JUDUL BUKU']}<br><strong>Tgl Pinjam:</strong> ${trx['TANGGAL PINJAM']}`;
-                document.getElementById('infoKembali').style.display = 'block';
-                document.getElementById('btnKembali').disabled = false;
-                document.getElementById('btnKembali').focus();
-            } else {
-                showAlert('alertScan', 'Transaksi tidak ditemukan!', 'error');
-                document.getElementById('scanKembali').value = '';
-                document.getElementById('scanKembali').focus();
-            }
-        }
-        
-        async function prosesPinjamScan() {
-            if(!scanAnggota || !scanBuku) return;
-            const today = new Date().toISOString().split('T')[0];
-            const nextWeek = new Date(Date.now() + 7*24*60*60*1000).toISOString().split('T')[0];
+        async function prosesPinjamScan(){
+            if(!scanAnggota||!scanBuku)return;
+            const today=new Date().toISOString().split('T')[0];
+            const nextWeek=new Date(Date.now()+7*24*60*60*1000).toISOString().split('T')[0];
             showLoading();
-            try {
-                const res = await callAPI('pinjam', { idAnggota: scanAnggota['ID ANGGOTA'] || scanAnggota.id, idBuku: scanBuku['ID BUKU'] || scanBuku.id, tglPinjam: today, tglKembali: nextWeek });
+            try{
+                const res=await callAPI('pinjam',{idAnggota:scanAnggota['ID ANGGOTA']||scanAnggota.id,idBuku:scanBuku['ID BUKU']||scanBuku.id,tglPinjam:today,tglKembali:nextWeek});
                 hideLoading();
-                if(res.success) { showAlert('alertScan', res.message + ' (ID: ' + res.id + ')', 'success'); resetScan(); loadDashboard(); }
-                else { showAlert('alertScan', res.message, 'error'); }
-            } catch(e) { hideLoading(); showAlert('alertScan', 'Gagal memproses!', 'error'); }
+                if(res.success){showAlert('alertScan',res.message+' (ID: '+res.id+')','success');resetScan();loadDashboard();}
+                else{showAlert('alertScan',res.message,'error');}
+            }catch(e){hideLoading();showAlert('alertScan','Gagal!','error');}
         }
         
-        async function prosesKembaliScan() {
-            if(!scanTransaksi) return;
-            if(!confirm('Konfirmasi pengembalian?')) return;
+        async function prosesKembaliScan(){
+            if(!scanTransaksi)return;
+            if(!confirm('Konfirmasi pengembalian?'))return;
             showLoading();
-            try {
-                const res = await callAPI('kembali', { idPinjam: scanTransaksi['ID PINJAM'] });
+            try{
+                const res=await callAPI('kembali',{idPinjam:scanTransaksi['ID PINJAM']});
                 hideLoading();
-                if(res.success) { showAlert('alertScan', res.message, 'success'); resetScan(); loadDashboard(); }
-                else { showAlert('alertScan', res.message, 'error'); }
-            } catch(e) { hideLoading(); showAlert('alertScan', 'Gagal memproses!', 'error'); }
+                if(res.success){showAlert('alertScan',res.message,'success');resetScan();loadDashboard();}
+                else{showAlert('alertScan',res.message,'error');}
+            }catch(e){hideLoading();showAlert('alertScan','Gagal!','error');}
         }
         
-        function resetScan() {
-            scanAnggota = null; scanBuku = null; scanTransaksi = null;
-            document.getElementById('scanAnggota').value = '';
-            document.getElementById('scanBuku').value = '';
-            document.getElementById('scanKembali').value = '';
-            document.getElementById('scanBuku').disabled = true;
-            document.getElementById('btnPinjam').disabled = true;
-            document.getElementById('btnKembali').disabled = true;
-            document.getElementById('infoScan').style.display = 'none';
-            document.getElementById('infoKembali').style.display = 'none';
+        function resetScan(){
+            scanAnggota=null;scanBuku=null;scanTransaksi=null;
+            document.getElementById('scanAnggota').value='';
+            document.getElementById('scanBuku').value='';
+            document.getElementById('scanKembali').value='';
+            document.getElementById('scanBuku').disabled=true;
+            document.getElementById('btnPinjam').disabled=true;
+            document.getElementById('btnKembali').disabled=true;
+            document.getElementById('infoScan').style.display='none';
+            document.getElementById('infoKembali').style.display='none';
             document.getElementById('scanAnggota').focus();
         }
         
-        function showAlert(elementId, message, type) {
-            const alert = document.getElementById(elementId);
-            if(!alert) return;
-            alert.textContent = message;
-            alert.className = 'alert alert-' + type;
-            alert.style.display = 'block';
-            setTimeout(() => alert.style.display = 'none', 5000);
+        function showAlert(id,msg,type){
+            const el=document.getElementById(id);
+            if(!el)return;
+            el.textContent=msg;
+            el.className='alert alert-'+type;
+            el.style.display='block';
+            setTimeout(()=>el.style.display='none',5000);
         }
         
-        function printBarcode(type) {
-            const data = type === 'buku' ? cacheBuku : cacheAnggota;
-            const label = type === 'buku' ? 'BUKU' : 'ANGGOTA';
-            let printWindow = window.open('', '_blank', 'width=800,height=600');
-            printWindow.document.write('<!DOCTYPE html><html><head><title>Print Barcode ' + label + '</title><script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"><\/script><style>@page{size:A4;margin:10mm}body{font-family:Arial;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;padding:10px}.barcode-card{border:1px solid #ccc;padding:10px;text-align:center;width:200px;page-break-inside:avoid}.barcode-card .label{font-size:11px;color:#666;margin-bottom:5px}.barcode-card .nama{font-size:13px;font-weight:bold;margin-bottom:8px}.barcode-card .id{font-size:14px;font-weight:bold;margin-top:5px;color:#333}.barcode-card svg{display:block;margin:0 auto}@media print{.no-print{display:none}}</style></head><body><button class="no-print" onclick="window.print()" style="margin:10px;padding:10px 20px;font-size:16px;cursor:pointer;position:fixed;top:10px;right:10px;z-index:999;">PRINT SEKARANG</button><div id="barcode-container"></div><script>var data=' + JSON.stringify(data) + ';var type="' + type + '";var container=document.getElementById("barcode-container");data.forEach(function(item,i){var card=document.createElement("div");card.className="barcode-card";var id=item["ID ' + (type==='buku'?'BUKU':'ANGGOTA') + '"]||item.id||"";var nama=type==="buku"?(item["JUDUL BUKU"]||item.judul||""):(item["NAMA LENGKAP"]||item.nama||"");var info=type==="buku"?(item["PENGARANG"]||item.pengarang||""):(item["KELAS/JURUSAN"]||item.kelas||"");card.innerHTML=\'<div class="label">\'+(type==="buku"?"BUKU":"ANGGOTA")+\'</div><div class="nama">\'+nama+\'</div><svg id="bc-print-\'+i+\'"></svg><div class="id">\'+id+\'</div><div style="font-size:10px;color:#888;">\'+info+\'</div>\';container.appendChild(card);try{JsBarcode("#bc-print-"+i,id,{format:"CODE128",width:2,height:60,displayValue:false,margin:5})}catch(e){}});<\/script></body></html>');
+        function printBarcode(type){
+            const data=type==='buku'?cacheBuku:cacheAnggota;
+            const label=type==='buku'?'BUKU':'ANGGOTA';
+            let w=window.open('','_blank','width=800,height=600');
+            w.document.write('<!DOCTYPE html><html><head><title>Print '+label+'</title><script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"><\/script><style>@page{size:A4;margin:10mm}body{font-family:Arial;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;padding:10px}.card{border:1px solid #ccc;padding:10px;text-align:center;width:200px;page-break-inside:avoid}.card svg{display:block;margin:0 auto}@media print{.no-print{display:none}}</style></head><body><button class="no-print" onclick="window.print()" style="position:fixed;top:10px;right:10px;z-index:999;padding:10px 20px;font-size:16px;">PRINT</button><div id="c"></div><script>var d='+JSON.stringify(data)+';var t="'+type+'";var c=document.getElementById("c");d.forEach(function(x,i){var id=x["ID '+(type==='buku'?'BUKU':'ANGGOTA')+'"]||x.id||"";var n=t==="buku"?(x["JUDUL BUKU"]||""):(x["NAMA LENGKAP"]||"");c.innerHTML+=\'<div class="card"><b>\'+n+\'</b><svg id="p-\'+i+\'"></svg><b>\'+id+\'</b></div>\';try{JsBarcode("#p-"+i,id,{format:"CODE128",width:2,height:50,displayValue:false,margin:5})}catch(e){}});<\/script></body></html>');
         }
-        function downloadBarcode(svgId, filename) {
-    const svg = document.getElementById(svgId);
-    if(!svg) return;
-    
-    // Clone SVG
-    const clone = svg.cloneNode(true);
-    clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-    
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    const svgData = new XMLSerializer().serializeToString(clone);
-    const img = new Image();
-    
-    img.onload = function() {
-        canvas.width = img.width;
-        canvas.height = img.height;
-        ctx.fillStyle = 'white';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(img, 0, 0);
         
-        const link = document.createElement('a');
-        link.download = filename + '.png';
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-    };
-    
-    img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)));
-}
-        function generateBarcodeAll() {
-            loadBuku().then(() => loadAnggota());
-            showAlert('alertBuku', 'Barcode berhasil digenerate!', 'success');
+        function downloadBarcode(svgId, filename){
+            const svg=document.getElementById(svgId);
+            if(!svg)return;
+            const clone=svg.cloneNode(true);
+            clone.setAttribute('xmlns','http://www.w3.org/2000/svg');
+            const canvas=document.createElement('canvas');
+            const ctx=canvas.getContext('2d');
+            const img=new Image();
+            img.onload=function(){
+                canvas.width=img.width;canvas.height=img.height;
+                ctx.fillStyle='white';ctx.fillRect(0,0,canvas.width,canvas.height);
+                ctx.drawImage(img,0,0);
+                const a=document.createElement('a');
+                a.download=filename+'.png';
+                a.href=canvas.toDataURL('image/png');
+                a.click();
+            };
+            img.src='data:image/svg+xml;base64,'+btoa(unescape(encodeURIComponent(new XMLSerializer().serializeToString(clone))));
         }
+        
+        function generateBarcodeAll(){loadBuku().then(()=>loadAnggota());showAlert('alertBuku','Barcode berhasil digenerate!','success');}
         
         loadDashboard();
-        setInterval(() => {
-            if(document.getElementById('mainSystem').style.display === 'block') {
-                const activePage = document.querySelector('.page.active');
-                if(activePage && activePage.id === 'dashboard') loadDashboard();
-            }
-        }, 30000);
+        setInterval(()=>{if(document.getElementById('mainSystem').style.display==='block'){const ap=document.querySelector('.page.active');if(ap&&ap.id==='dashboard')loadDashboard();}},30000);
     </script>
 </body>
 </html>
