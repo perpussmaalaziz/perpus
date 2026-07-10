@@ -425,11 +425,11 @@ async function cekKembaliBuku(id){
     if(trx){
         kembaliBuku = trx;
         document.getElementById('infoKembaliBuku').innerHTML = `
-            <strong>Buku:</strong> ${trx['JUDUL BUKU']}<br>
-            <strong>Tgl Pinjam:</strong> ${formatTanggal(trx['TANGGAL PINJAM'])}<br>
-            <strong>Tgl Kembali:</strong> ${formatTanggal(trx['TANGGAL KEMBALI'])}<br>
-            <strong>Status:</strong> ${trx['STATUS']}
-        `;
+    <strong>Buku:</strong> ${trx['JUDUL BUKU']}<br>
+    <strong>Tgl Pinjam:</strong> ${formatTanggalJam(trx['TANGGAL PINJAM'])}<br>
+    <strong>Tgl Kembali:</strong> ${formatTanggal(trx['TANGGAL KEMBALI'])}<br>
+    <strong>Status:</strong> ${trx['STATUS']}
+`;
         document.getElementById('infoKembaliBuku').style.display = 'block';
         document.getElementById('btnProsesKembali').disabled = false;
         document.getElementById('btnProsesKembali').focus();
@@ -477,11 +477,20 @@ function resetPengembalian(){
         }
         
         function renderHistory(){
-            document.getElementById('tabelHistory').innerHTML=cacheTransaksi.map(t=>{
-                let sc=t['STATUS']==='Dikembalikan'?'badge-kembali':(t['STATUS']==='⚠️ Terlambat'?'badge-terlambat':'badge-pinjam');
-                return`<tr><td><strong>${t['ID PINJAM']||''}</strong></td><td>${formatTanggal(t['TANGGAL PINJAM'])}</td><td>${t['NAMA ANGGOTA']||''}</td><td>${t['JUDUL BUKU']||''}</td><td>${formatTanggal(t['TANGGAL KEMBALI'])}</td><td>${t['TANGGAL DIKEMBALIKAN'] ? formatTanggal(t['TANGGAL DIKEMBALIKAN']) : '-'}</td><td><span class="badge ${sc}">${t['STATUS']||''}</span></td><td><button class="btn btn-danger" style="font-size:10px;" onclick="hapusHistory('${t['ID PINJAM']}')">Hapus</button></td></tr>`;
-            }).join('');
-        }
+    document.getElementById('tabelHistory').innerHTML=cacheTransaksi.map(t=>{
+        let sc=t['STATUS']==='Dikembalikan'?'badge-kembali':(t['STATUS']==='⚠️ Terlambat'?'badge-terlambat':'badge-pinjam');
+        return`<tr>
+            <td><strong>${t['ID PINJAM']||''}</strong></td>
+            <td>${formatTanggalJam(t['TANGGAL PINJAM'])}</td>
+            <td>${t['NAMA ANGGOTA']||''}</td>
+            <td>${t['JUDUL BUKU']||''}</td>
+            <td>${formatTanggal(t['TANGGAL KEMBALI'])}</td>
+            <td>${t['TANGGAL DIKEMBALIKAN'] ? formatTanggalJam(t['TANGGAL DIKEMBALIKAN']) : '-'}</td>
+            <td><span class="badge ${sc}">${t['STATUS']||''}</span></td>
+            <td><button class="btn btn-danger" style="font-size:10px;" onclick="hapusHistory('${t['ID PINJAM']}')">Hapus</button></td>
+        </tr>`;
+    }).join('');
+}
         
         async function hapusHistory(id){
             if(!confirm('Yakin hapus transaksi '+id+'?\nStok akan dikembalikan otomatis.'))return;
@@ -495,7 +504,8 @@ function resetPengembalian(){
         }
         
         // UTILITY
-       function formatTanggal(dateStr) {
+       // Format tanggal + jam (untuk Tgl Pinjam & Tgl Dikembalikan)
+function formatTanggalJam(dateStr) {
     if(!dateStr) return '-';
     const d = new Date(dateStr);
     const dd = String(d.getDate()).padStart(2, '0');
@@ -504,6 +514,16 @@ function resetPengembalian(){
     const hh = String(d.getHours()).padStart(2, '0');
     const min = String(d.getMinutes()).padStart(2, '0');
     return `${dd}/${mm}/${yy} ${hh}:${min} WIB`;
+}
+
+// Format tanggal saja (untuk Tgl Kembali)
+function formatTanggal(dateStr) {
+    if(!dateStr) return '-';
+    const d = new Date(dateStr);
+    const dd = String(d.getDate()).padStart(2, '0');
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const yy = String(d.getFullYear()).slice(2);
+    return `${dd}/${mm}/${yy}`;
 }
         function showAlert(id,msg,type){const el=document.getElementById(id);if(!el)return;el.textContent=msg;el.className='alert alert-'+type;el.style.display='block';setTimeout(()=>el.style.display='none',5000);}
         function printBarcode(type){const data=type==='buku'?cacheBuku:cacheAnggota;let w=window.open('','_blank','width=800,height=600');w.document.write('<!DOCTYPE html><html><head><script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"><\/script><style>@page{size:A4;margin:10mm}body{font-family:Arial;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;padding:10px}.card{border:1px solid #ccc;padding:10px;text-align:center;width:200px;page-break-inside:avoid}@media print{.no-print{display:none}}</style></head><body><button class="no-print" onclick="window.print()" style="position:fixed;top:10px;right:10px;z-index:999;padding:10px 20px;">PRINT</button><div id="c"></div><script>var d='+JSON.stringify(data)+';var t="'+type+'";d.forEach(function(x,i){var id=x["ID '+(type==='buku'?'BUKU':'ANGGOTA')+'"]||x.id||"";var n=t==="buku"?(x["JUDUL BUKU"]||""):(x["NAMA LENGKAP"]||"");document.getElementById("c").innerHTML+=\'<div class="card"><b>\'+n+\'</b><svg id="p-\'+i+\'"></svg><b>\'+id+\'</b></div>\';try{JsBarcode("#p-"+i,id,{format:"CODE128",width:2,height:50,displayValue:false,margin:5})}catch(e){}});<\/script></body></html>');}
