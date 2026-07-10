@@ -60,485 +60,104 @@
     </style>
 </head>
 <body>
-    
-    <div class="login-container" id="loginPage">
-        <div class="login-box">
-            <h1>SISTEM PERPUSTAKAAN</h1>
-            <p>SMA Al-Aziz Bangil</p>
-            <div class="form-group"><label>Username</label><input type="text" id="username" placeholder="Masukkan username" autofocus></div>
-            <div class="form-group"><label>Password</label><input type="password" id="password" placeholder="Masukkan password"></div>
-            <button class="btn-login" onclick="login()">Masuk</button>
-            <div class="login-error" id="loginError">Username atau password salah!</div>
-        </div>
-    </div>
+<div class="login-container" id="loginPage"><div class="login-box"><h1>SISTEM PERPUSTAKAAN</h1><p>SMA Al-Aziz Bangil</p><div class="form-group"><label>Username</label><input type="text" id="username" autofocus></div><div class="form-group"><label>Password</label><input type="password" id="password"></div><button class="btn-login" onclick="login()">Masuk</button><div class="login-error" id="loginError">Username atau password salah!</div></div></div>
 
-    <div id="mainSystem">
-        <div class="header">
-            <h1>SISTEM PERPUSTAKAAN SMA AL-AZIZ BANGIL</h1>
-            <div>
-                <span id="clock" style="margin-right: 15px;"></span>
-                <button class="logout-btn" onclick="logout()">Logout</button>
-            </div>
-        </div>
-        <div class="nav">
-            <button onclick="showPage('dashboard')" class="active" id="nav-dashboard">Dashboard</button>
-            <button onclick="showPage('buku')" id="nav-buku">Data Buku</button>
-            <button onclick="showPage('anggota')" id="nav-anggota">Anggota</button>
-            <button onclick="showPage('peminjaman')" id="nav-peminjaman">Peminjaman</button>
-            <button onclick="showPage('pengembalian')" id="nav-pengembalian">Pengembalian</button>
-            <button onclick="showPage('history')" id="nav-history">History</button>
-        </div>
-        <div class="container">
-            <div class="loading" id="loading"><div class="spinner"></div><p>Memuat data...</p></div>
-            
-            <!-- DASHBOARD -->
-            <div id="dashboard" class="page active">
-                <h2>Dashboard</h2>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 15px 0;">
-                    <div style="background:#e8f0fe; padding:20px; border-radius:10px; text-align:center;"><h3>Total Buku</h3><p style="font-size:32px;font-weight:bold;" id="totalBuku">-</p></div>
-                    <div style="background:#d4edda; padding:20px; border-radius:10px; text-align:center;"><h3>Total Anggota</h3><p style="font-size:32px;font-weight:bold;" id="totalAnggota">-</p></div>
-                    <div style="background:#fff3cd; padding:20px; border-radius:10px; text-align:center;"><h3>Sedang Dipinjam</h3><p style="font-size:32px;font-weight:bold;" id="totalDipinjam">-</p></div>
-                    <div style="background:#f8d7da; padding:20px; border-radius:10px; text-align:center;"><h3>Terlambat</h3><p style="font-size:32px;font-weight:bold;" id="totalTerlambat">-</p></div>
-                </div>
-                <button class="btn btn-info" onclick="loadDashboard()">Refresh Data</button>
-            </div>
-            
-            <!-- DATA BUKU -->
-            <div id="buku" class="page">
-                <h2>Data Buku</h2>
-                <div id="alertBuku" class="alert"></div>
-                <div class="btn-group">
-                    <button class="btn btn-primary" onclick="showFormBuku()">+ Tambah Buku</button>
-                    <button class="btn btn-success" onclick="printBarcode('buku')">Print Barcode</button>
-                    <button class="btn btn-info" onclick="loadBuku()">Refresh</button>
-                </div>
-                <div id="formBuku" style="display:none;" class="card">
-                    <input type="hidden" id="editBukuId">
-                    <div class="form-group"><label>ID Buku</label><input type="text" id="idBuku" placeholder="B001"></div>
-                    <div class="form-group"><label>Judul</label><input type="text" id="judulBuku" placeholder="Judul buku"></div>
-                    <div class="form-group"><label>Pengarang</label><input type="text" id="pengarangBuku"></div>
-                    <div class="form-group"><label>Penerbit</label><input type="text" id="penerbitBuku"></div>
-                    <div class="form-group"><label>Tahun</label><input type="number" id="tahunBuku"></div>
-                    <div class="form-group"><label>Stok</label><input type="number" id="stokBuku" value="1"></div>
-                    <div class="btn-group"><button class="btn btn-success" onclick="simpanBuku()">Simpan</button><button class="btn btn-danger" onclick="batalBuku()">Batal</button></div>
-                </div>
-                <div style="overflow-x:auto;"><table><thead><tr><th>Barcode</th><th>ID</th><th>Judul</th><th>Pengarang</th><th>Penerbit</th><th>Tahun</th><th>Stok</th><th>Aksi</th></tr></thead><tbody id="tabelBuku"></tbody></table></div>
-            </div>
-            
-            <!-- DATA ANGGOTA -->
-            <div id="anggota" class="page">
-                <h2>Data Anggota</h2>
-                <div id="alertAnggota" class="alert"></div>
-                <div class="btn-group">
-                    <button class="btn btn-primary" onclick="showFormAnggota()">+ Tambah Anggota</button>
-                    <button class="btn btn-success" onclick="printBarcode('anggota')">Print Barcode</button>
-                    <button class="btn btn-info" onclick="loadAnggota()">Refresh</button>
-                </div>
-                <div id="formAnggota" style="display:none;" class="card">
-                    <input type="hidden" id="editAnggotaId">
-                    <div class="form-group"><label>ID Anggota</label><input type="text" id="idAnggota" placeholder="A001"></div>
-                    <div class="form-group"><label>Nama Lengkap</label><input type="text" id="namaAnggota"></div>
-                    <div class="form-group"><label>Kelas/Jurusan</label><input type="text" id="kelasAnggota"></div>
-                    <div class="form-group"><label>No Telepon</label><input type="text" id="telpAnggota"></div>
-                    <div class="btn-group"><button class="btn btn-success" onclick="simpanAnggota()">Simpan</button><button class="btn btn-danger" onclick="batalAnggota()">Batal</button></div>
-                </div>
-                <div style="overflow-x:auto;"><table><thead><tr><th>Barcode</th><th>ID</th><th>Nama</th><th>Kelas</th><th>No Telp</th><th>Aksi</th></tr></thead><tbody id="tabelAnggota"></tbody></table></div>
-            </div>
-            
-           <!-- PEMINJAMAN (SCAN) -->
-<div id="peminjaman" class="page">
-    <h2>Peminjaman Buku</h2>
-    <div id="alertPeminjaman" class="alert"></div>
-    <div class="card">
-        <div class="scanner-ready"><p class="blink">SIAP SCAN</p></div>
-        <div style="display:flex; gap:15px; flex-wrap:wrap;">
-            <div style="flex:1; min-width:250px;">
-                <div class="form-group"><label>Scan ID Anggota</label><input type="text" id="pinjamAnggota" placeholder="Scan kartu anggota..." autofocus></div>
-                <div id="infoPinjamAnggota" style="display:none; background:#e8f0fe; padding:10px; border-radius:5px; margin:10px 0;"></div>
-                <div class="form-group"><label>Tanggal Kembali</label><input type="date" id="tglKembaliPinjam"></div>
-            </div>
-            <div style="flex:1; min-width:250px;">
-                <div class="form-group"><label>Scan ID Buku</label><input type="text" id="pinjamBuku" placeholder="Scan barcode buku..." disabled></div>
-                <div class="keranjang" id="keranjangBuku"><p style="color:#999;">Belum ada buku di-scan</p></div>
-            </div>
-        </div>
-        <div class="btn-group">
-            <button class="btn btn-success" id="btnProsesPinjam" disabled onclick="prosesPinjamMulti()">Proses Peminjaman</button>
-            <button class="btn btn-danger" onclick="resetPinjam()">Reset</button>
-        </div>
-    </div>
+<div id="mainSystem">
+<div class="header"><h1>SISTEM PERPUSTAKAAN SMA AL-AZIZ BANGIL</h1><div><span id="clock" style="margin-right:15px;"></span><button class="logout-btn" onclick="logout()">Logout</button></div></div>
+<div class="nav">
+<button onclick="showPage('dashboard')" class="active" id="nav-dashboard">Dashboard</button>
+<button onclick="showPage('buku')" id="nav-buku">Data Buku</button>
+<button onclick="showPage('anggota')" id="nav-anggota">Anggota</button>
+<button onclick="showPage('peminjaman')" id="nav-peminjaman">Peminjaman</button>
+<button onclick="showPage('pengembalian')" id="nav-pengembalian">Pengembalian</button>
+<button onclick="showPage('history')" id="nav-history">History</button>
 </div>
-            
-            <!-- PENGEMBALIAN (SCAN) -->
-<div id="pengembalian" class="page">
-    <h2>Pengembalian Buku</h2>
-    <div id="alertPengembalian" class="alert"></div>
-    <div class="card">
-        <div class="scanner-ready"><p class="blink">SIAP SCAN</p></div>
-        <div class="form-group"><label>Scan ID Anggota</label><input type="text" id="kembaliAnggota" placeholder="Scan kartu anggota..." autofocus></div>
-        <div id="infoKembaliAnggota" style="display:none; background:#e8f0fe; padding:10px; border-radius:5px; margin:10px 0;"></div>
-        <div class="form-group"><label>Scan ID Buku</label><input type="text" id="kembaliBuku" placeholder="Scan barcode buku..." disabled></div>
-        <div id="infoKembaliBuku" style="display:none; background:#e8f0fe; padding:10px; border-radius:5px; margin:10px 0;"></div>
-        <button class="btn btn-warning" id="btnProsesKembali" disabled onclick="prosesKembaliScan()">Proses Pengembalian</button>
-        <button class="btn btn-danger" onclick="resetPengembalian()" style="margin-left:5px;">Reset</button>
-    </div>
-</div>
-            
-            <!-- HISTORY -->
-            <div id="history" class="page">
-                <h2>History Transaksi</h2>
-                <div id="alertHistory" class="alert"></div>
-                <button class="btn btn-info" onclick="loadHistory()">Refresh</button>
-                <div style="overflow-x:auto;"><table><thead><tr><th>ID</th><th>Tgl Pinjam</th><th>Anggota</th><th>Buku</th><th>Tgl Kembali</th><th>Tgl Dikembalikan</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="tabelHistory"></tbody></table></div>
-            </div>
-        </div>
-    </div>
+<div class="container"><div class="loading" id="loading"><div class="spinner"></div><p>Memuat data...</p></div>
 
-    <script>
-        // LOGIN
-        if(sessionStorage.getItem('loggedIn') === 'true') {
-            document.getElementById('loginPage').style.display = 'none';
-            document.getElementById('mainSystem').style.display = 'block';
-            loadDashboard(); updateClock(); setInterval(updateClock, 1000);
-        }
-        
-        async function login() {
-            const u = document.getElementById('username').value, p = document.getElementById('password').value;
-            if(!u||!p){document.getElementById('loginError').style.display='block';return;}
-            showLoading();
-            try{
-                const r = await callAPI('login',{username:u,password:p}); hideLoading();
-                if(r.success){
-                    sessionStorage.setItem('loggedIn','true');
-                    document.getElementById('loginPage').style.display='none';
-                    document.getElementById('mainSystem').style.display='block';
-                    loadDashboard(); updateClock(); setInterval(updateClock,1000);
-                }else{
-                    document.getElementById('loginError').style.display='block';
-                    document.getElementById('loginError').textContent=r.message;
-                    document.getElementById('password').value='';document.getElementById('password').focus();
-                }
-            }catch(e){hideLoading();document.getElementById('loginError').style.display='block';}
-        }
-        
-        function logout(){sessionStorage.removeItem('loggedIn');window.location.href='https://perpussmaalaziz.github.io/perpus/';}
-        document.getElementById('password').addEventListener('keydown',function(e){if(e.key==='Enter')login();});
-        document.getElementById('username').addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('password').focus();});
+<!-- DASHBOARD --><div id="dashboard" class="page active"><h2>Dashboard</h2><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;margin:15px 0;"><div style="background:#e8f0fe;padding:20px;border-radius:10px;text-align:center;"><h3>Total Buku</h3><p style="font-size:32px;font-weight:bold;" id="totalBuku">-</p></div><div style="background:#d4edda;padding:20px;border-radius:10px;text-align:center;"><h3>Total Anggota</h3><p style="font-size:32px;font-weight:bold;" id="totalAnggota">-</p></div><div style="background:#fff3cd;padding:20px;border-radius:10px;text-align:center;"><h3>Sedang Dipinjam</h3><p style="font-size:32px;font-weight:bold;" id="totalDipinjam">-</p></div><div style="background:#f8d7da;padding:20px;border-radius:10px;text-align:center;"><h3>Terlambat</h3><p style="font-size:32px;font-weight:bold;" id="totalTerlambat">-</p></div></div><button class="btn btn-info" onclick="loadDashboard()">Refresh</button></div>
 
-        // CONFIG
-        const API_URL = 'https://script.google.com/macros/s/AKfycbyNUC7lbDSaIUa-khRTlbOnJ5_g1q9FXql8Fs3453f9NcFGx7Xk-2LwZRX0SpMGNHk_WQ/exec';
-        let cacheBuku=[],cacheAnggota=[],cacheTransaksi=[];
-        let pinjamAnggota=null,pinjamBukuList=[],kembaliTransaksi=null;
-        
-        async function callAPI(action,data={}){data.action=action;const r=await fetch(API_URL,{method:'POST',body:JSON.stringify(data)});return await r.json();}
-        function showPage(id){
-            document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-            document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            const nb=document.getElementById('nav-'+id);if(nb)nb.classList.add('active');
-            if(id==='dashboard')loadDashboard();
-            if(id==='buku')loadBuku();
-            if(id==='anggota')loadAnggota();
-            if(id==='peminjaman')initPeminjaman();
-            if(id==='pengembalian')initPengembalian();
-            if(id==='history')loadHistory();
-        }
-        function updateClock(){const c=document.getElementById('clock');if(c)c.textContent=new Date().toLocaleString('id-ID');}
-        function showLoading(){document.getElementById('loading').style.display='block';}
-        function hideLoading(){document.getElementById('loading').style.display='none';}
-        
-        // DASHBOARD
-        async function loadDashboard(){
-            showLoading();
-            try{
-                const[br,ar,tr]=await Promise.all([callAPI('getBuku'),callAPI('getAnggota'),callAPI('getTransaksi')]);
-                if(br.success)cacheBuku=br.data;
-                if(ar.success)cacheAnggota=ar.data;
-                if(tr.success)cacheTransaksi=tr.data;
-                document.getElementById('totalBuku').textContent=cacheBuku.length;
-                document.getElementById('totalAnggota').textContent=cacheAnggota.length;
-                document.getElementById('totalDipinjam').textContent=cacheTransaksi.filter(t=>t['STATUS']==='Dipinjam'||t['STATUS']==='⚠️ Terlambat').length;
-                document.getElementById('totalTerlambat').textContent=cacheTransaksi.filter(t=>t['STATUS']==='⚠️ Terlambat').length;
-            }catch(e){}
-            hideLoading();
-        }
-        
-        // BUKU & ANGGOTA (sama seperti sebelumnya)
-        async function loadBuku(){showLoading();try{const r=await callAPI('getBuku');if(r.success){cacheBuku=r.data;renderBuku();}}catch(e){}hideLoading();}
-        function renderBuku(){
-            document.getElementById('tabelBuku').innerHTML=cacheBuku.map((b,i)=>{
-                const id=b['ID BUKU']||b.id||'';
-                return`<tr><td><div style="display:flex;align-items:center;gap:8px;"><svg id="bc-buku-${i}"></svg><button class="btn btn-success" style="font-size:10px;" onclick="downloadBarcode('bc-buku-${i}','${id}')">Download</button></div></td><td>${id}</td><td>${b['JUDUL BUKU']||''}</td><td>${b['PENGARANG']||''}</td><td>${b['PENERBIT']||''}</td><td>${b['TAHUN']||''}</td><td><strong>${b['STOK']||0}</strong></td><td><button class="btn btn-warning" style="font-size:10px;" onclick="editBuku('${id}')">Edit</button></td></tr>`;
-            }).join('');
-            setTimeout(()=>cacheBuku.forEach((b,i)=>{try{const s=document.getElementById(`bc-buku-${i}`);if(s)JsBarcode(s,b['ID BUKU']||b.id||'',{format:"CODE128",width:2,height:50,displayValue:true,fontSize:12,margin:8});}catch(e){}}),200);
-        }
-        function showFormBuku(){document.getElementById('formBuku').style.display='block';document.getElementById('editBukuId').value='';document.getElementById('idBuku').value='';document.getElementById('idBuku').disabled=false;document.getElementById('judulBuku').value='';document.getElementById('pengarangBuku').value='';document.getElementById('penerbitBuku').value='';document.getElementById('tahunBuku').value='';document.getElementById('stokBuku').value='1';}
-        function editBuku(id){const b=cacheBuku.find(x=>(x['ID BUKU']||x.id)===id);if(!b)return;document.getElementById('formBuku').style.display='block';document.getElementById('editBukuId').value=id;document.getElementById('idBuku').value=id;document.getElementById('idBuku').disabled=true;document.getElementById('judulBuku').value=b['JUDUL BUKU']||'';document.getElementById('pengarangBuku').value=b['PENGARANG']||'';document.getElementById('penerbitBuku').value=b['PENERBIT']||'';document.getElementById('tahunBuku').value=b['TAHUN']||'';document.getElementById('stokBuku').value=b['STOK']||1;document.getElementById('formBuku').scrollIntoView({behavior:'smooth'});}
-        async function simpanBuku(){const id=document.getElementById('idBuku').value,judul=document.getElementById('judulBuku').value;if(!id||!judul){showAlert('alertBuku','ID dan Judul wajib diisi!','error');return;}showLoading();try{const eid=document.getElementById('editBukuId').value;const d={idBuku:id,judul,pengarang:document.getElementById('pengarangBuku').value,penerbit:document.getElementById('penerbitBuku').value,tahun:document.getElementById('tahunBuku').value,stok:parseInt(document.getElementById('stokBuku').value)};const r=await callAPI(eid?'editBuku':'tambahBuku',d);hideLoading();if(r.success){showAlert('alertBuku',r.message,'success');batalBuku();loadBuku();loadDashboard();}else{showAlert('alertBuku',r.message,'error');}}catch(e){hideLoading();showAlert('alertBuku','Gagal!','error');}}
-        function batalBuku(){document.getElementById('formBuku').style.display='none';}
-        
-        async function loadAnggota(){showLoading();try{const r=await callAPI('getAnggota');if(r.success){cacheAnggota=r.data;renderAnggota();}}catch(e){}hideLoading();}
-        function renderAnggota(){
-            document.getElementById('tabelAnggota').innerHTML=cacheAnggota.map((a,i)=>{
-                const id=a['ID ANGGOTA']||a.id||'';
-                return`<tr><td><div style="display:flex;align-items:center;gap:8px;"><svg id="bc-anggota-${i}"></svg><button class="btn btn-success" style="font-size:10px;" onclick="downloadBarcode('bc-anggota-${i}','${id}')">Download</button></div></td><td>${id}</td><td>${a['NAMA LENGKAP']||''}</td><td>${a['KELAS/JURUSAN']||''}</td><td>${a['NO TELEPON']||''}</td><td><button class="btn btn-warning" style="font-size:10px;" onclick="editAnggota('${id}')">Edit</button></td></tr>`;
-            }).join('');
-            setTimeout(()=>cacheAnggota.forEach((a,i)=>{try{const s=document.getElementById(`bc-anggota-${i}`);if(s)JsBarcode(s,a['ID ANGGOTA']||a.id||'',{format:"CODE128",width:2,height:50,displayValue:true,fontSize:12,margin:8});}catch(e){}}),200);
-        }
-        function showFormAnggota(){document.getElementById('formAnggota').style.display='block';document.getElementById('editAnggotaId').value='';document.getElementById('idAnggota').value='';document.getElementById('idAnggota').disabled=false;document.getElementById('namaAnggota').value='';document.getElementById('kelasAnggota').value='';document.getElementById('telpAnggota').value='';}
-        function editAnggota(id){const a=cacheAnggota.find(x=>(x['ID ANGGOTA']||x.id)===id);if(!a)return;document.getElementById('formAnggota').style.display='block';document.getElementById('editAnggotaId').value=id;document.getElementById('idAnggota').value=id;document.getElementById('idAnggota').disabled=true;document.getElementById('namaAnggota').value=a['NAMA LENGKAP']||'';document.getElementById('kelasAnggota').value=a['KELAS/JURUSAN']||'';document.getElementById('telpAnggota').value=a['NO TELEPON']||'';document.getElementById('formAnggota').scrollIntoView({behavior:'smooth'});}
-        async function simpanAnggota(){const id=document.getElementById('idAnggota').value,nama=document.getElementById('namaAnggota').value;if(!id||!nama){showAlert('alertAnggota','ID dan Nama wajib diisi!','error');return;}showLoading();try{const eid=document.getElementById('editAnggotaId').value;const d={idAnggota:id,nama,kelas:document.getElementById('kelasAnggota').value,telp:document.getElementById('telpAnggota').value};const r=await callAPI(eid?'editAnggota':'tambahAnggota',d);hideLoading();if(r.success){showAlert('alertAnggota',r.message,'success');batalAnggota();loadAnggota();loadDashboard();}else{showAlert('alertAnggota',r.message,'error');}}catch(e){hideLoading();showAlert('alertAnggota','Gagal!','error');}}
-        function batalAnggota(){document.getElementById('formAnggota').style.display='none';}
-        
-        // PEMINJAMAN (SCAN MULTI BUKU)
-        function initPeminjaman(){
-            document.getElementById('pinjamAnggota').disabled=false;
-            document.getElementById('pinjamAnggota').focus();
-            document.getElementById('pinjamAnggota').onkeydown=function(e){if(e.key==='Enter'){e.preventDefault();const id=this.value.trim();if(id)cekPinjamAnggota(id);}};
-            document.getElementById('pinjamBuku').onkeydown=function(e){if(e.key==='Enter'){e.preventDefault();const id=this.value.trim();if(id)tambahBukuKeKeranjang(id);}};
-            const today=new Date();today.setDate(today.getDate()+7);
-            document.getElementById('tglKembaliPinjam').value=today.toISOString().split('T')[0];
-        }
-        
-        async function cekPinjamAnggota(id){
-            showLoading();await loadDashboard();hideLoading();
-            const a=cacheAnggota.find(x=>(x['ID ANGGOTA']||x.id)===id);
-            if(a){
-                pinjamAnggota=a;
-                document.getElementById('infoPinjamAnggota').innerHTML=`<strong>Anggota:</strong> ${a['NAMA LENGKAP']||a.nama}<br><small>${a['KELAS/JURUSAN']||''}</small>`;
-                document.getElementById('infoPinjamAnggota').style.display='block';
-                document.getElementById('pinjamBuku').disabled=false;
-                document.getElementById('pinjamBuku').focus();
-            }else{
-                showAlert('alertPeminjaman','Anggota tidak ditemukan!','error');
-                document.getElementById('pinjamAnggota').value='';document.getElementById('pinjamAnggota').focus();
-            }
-        }
-        
-        async function tambahBukuKeKeranjang(id){
-            showLoading();await loadDashboard();hideLoading();
-            const b=cacheBuku.find(x=>(x['ID BUKU']||x.id)===id);
-            if(!b){showAlert('alertPeminjaman','Buku tidak ditemukan!','error');document.getElementById('pinjamBuku').value='';document.getElementById('pinjamBuku').focus();return;}
-            if((b['STOK']||0)<=0){showAlert('alertPeminjaman','Stok habis!','error');document.getElementById('pinjamBuku').value='';document.getElementById('pinjamBuku').focus();return;}
-            if(pinjamBukuList.find(x=>x.id===id)){showAlert('alertPeminjaman','Buku sudah di keranjang!','error');document.getElementById('pinjamBuku').value='';document.getElementById('pinjamBuku').focus();return;}
-            if(pinjamBukuList.length>=10){showAlert('alertPeminjaman','Maksimal 10 buku!','error');return;}
-            
-            pinjamBukuList.push({id:id,judul:b['JUDUL BUKU']||b.judul});
-            renderKeranjang();
-            document.getElementById('pinjamBuku').value='';
-            document.getElementById('pinjamBuku').focus();
-            document.getElementById('btnProsesPinjam').disabled=false;
-        }
-        
-        function renderKeranjang(){
-            const k=document.getElementById('keranjangBuku');
-            if(pinjamBukuList.length===0){
-                k.innerHTML='<p style="color:#999;">Belum ada buku di-scan</p>';
-            }else{
-                k.innerHTML=pinjamBukuList.map((b,i)=>`<div class="keranjang-item"><span>${b.id} - ${b.judul}</span><button class="btn btn-danger" style="font-size:10px;" onclick="hapusDariKeranjang(${i})">X</button></div>`).join('');
-            }
-        }
-        
-        function hapusDariKeranjang(i){pinjamBukuList.splice(i,1);renderKeranjang();if(pinjamBukuList.length===0)document.getElementById('btnProsesPinjam').disabled=true;}
-        
-        async function prosesPinjamMulti(){
-            if(!pinjamAnggota||pinjamBukuList.length===0)return;
-            const tgl=document.getElementById('tglKembaliPinjam').value;
-            if(!tgl){showAlert('alertPeminjaman','Pilih tanggal kembali!','error');return;}
-            
-            showLoading();
-            let success=[],gagal=[];
-            for(const b of pinjamBukuList){
-                const today=new Date().toISOString().split('T')[0];
-                try{
-                    const r=await callAPI('pinjam',{idAnggota:pinjamAnggota['ID ANGGOTA']||pinjamAnggota.id,idBuku:b.id,tglPinjam:today,tglKembali:tgl});
-                    if(r.success)success.push(b.judul);else gagal.push(b.judul+' ('+r.message+')');
-                }catch(e){gagal.push(b.judul);}
-            }
-            hideLoading();
-            
-            let msg='';
-            if(success.length>0)msg+=`✅ ${success.length} buku berhasil dipinjam!\n`;
-            if(gagal.length>0)msg+=`❌ Gagal: ${gagal.join(', ')}`;
-            showAlert('alertPeminjaman',msg,success.length>0?'success':'error');
-            
-            resetPinjam();
-            loadDashboard();
-        }
-        
-        function resetPinjam(){
-            pinjamAnggota=null;pinjamBukuList=[];
-            document.getElementById('pinjamAnggota').value='';
-            document.getElementById('pinjamBuku').value='';
-            document.getElementById('pinjamBuku').disabled=true;
-            document.getElementById('btnProsesPinjam').disabled=true;
-            document.getElementById('infoPinjamAnggota').style.display='none';
-            renderKeranjang();
-            document.getElementById('pinjamAnggota').focus();
-        }
-        
-        // PENGEMBALIAN (SCAN ANGGOTA + BUKU)
-let kembaliAnggota = null, kembaliBuku = null;
+<!-- DATA BUKU --><div id="buku" class="page"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;"><h2>Data Buku</h2><input type="text" id="searchBuku" placeholder="🔍 Cari..." style="width:250px;padding:8px 12px;border:2px solid #1a73e8;border-radius:8px;font-size:14px;" oninput="filterBuku()"></div><div id="alertBuku" class="alert"></div><div class="btn-group"><button class="btn btn-primary" onclick="showFormBuku()">+ Tambah Buku</button><button class="btn btn-success" onclick="printBarcode('buku')">Print Barcode</button><button class="btn btn-info" onclick="loadBuku()">Refresh</button></div><div id="formBuku" style="display:none;" class="card"><input type="hidden" id="editBukuId"><div class="form-group"><label>ID Buku</label><input type="text" id="idBuku" placeholder="B001"></div><div class="form-group"><label>Judul</label><input type="text" id="judulBuku"></div><div class="form-group"><label>Pengarang</label><input type="text" id="pengarangBuku"></div><div class="form-group"><label>Penerbit</label><input type="text" id="penerbitBuku"></div><div class="form-group"><label>Tahun</label><input type="number" id="tahunBuku"></div><div class="form-group"><label>Stok</label><input type="number" id="stokBuku" value="1"></div><div class="btn-group"><button class="btn btn-success" onclick="simpanBuku()">Simpan</button><button class="btn btn-danger" onclick="batalBuku()">Batal</button></div></div><div style="overflow-x:auto;"><table><thead><tr><th>Barcode</th><th>ID</th><th>Judul</th><th>Pengarang</th><th>Penerbit</th><th>Tahun</th><th>Stok</th><th>Aksi</th></tr></thead><tbody id="tabelBuku"></tbody></table></div></div>
 
-function initPengembalian(){
-    document.getElementById('kembaliAnggota').disabled = false;
-    document.getElementById('kembaliAnggota').focus();
-    document.getElementById('kembaliAnggota').onkeydown = function(e){
-        if(e.key === 'Enter'){ e.preventDefault(); const id = this.value.trim(); if(id) cekKembaliAnggota(id); }
-    };
-    document.getElementById('kembaliBuku').onkeydown = function(e){
-        if(e.key === 'Enter'){ e.preventDefault(); const id = this.value.trim(); if(id) cekKembaliBuku(id); }
-    };
-}
+<!-- DATA ANGGOTA --><div id="anggota" class="page"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;"><h2>Data Anggota</h2><input type="text" id="searchAnggota" placeholder="🔍 Cari..." style="width:250px;padding:8px 12px;border:2px solid #1a73e8;border-radius:8px;font-size:14px;" oninput="filterAnggota()"></div><div id="alertAnggota" class="alert"></div><div class="btn-group"><button class="btn btn-primary" onclick="showFormAnggota()">+ Tambah Anggota</button><button class="btn btn-success" onclick="printBarcode('anggota')">Print Barcode</button><button class="btn btn-info" onclick="loadAnggota()">Refresh</button></div><div id="formAnggota" style="display:none;" class="card"><input type="hidden" id="editAnggotaId"><div class="form-group"><label>ID Anggota</label><input type="text" id="idAnggota" placeholder="A001"></div><div class="form-group"><label>Nama Lengkap</label><input type="text" id="namaAnggota"></div><div class="form-group"><label>Kelas/Jurusan</label><input type="text" id="kelasAnggota"></div><div class="form-group"><label>No Telepon</label><input type="text" id="telpAnggota"></div><div class="btn-group"><button class="btn btn-success" onclick="simpanAnggota()">Simpan</button><button class="btn btn-danger" onclick="batalAnggota()">Batal</button></div></div><div style="overflow-x:auto;"><table><thead><tr><th>Barcode</th><th>ID</th><th>Nama</th><th>Kelas</th><th>No Telp</th><th>Aksi</th></tr></thead><tbody id="tabelAnggota"></tbody></table></div></div>
 
-async function cekKembaliAnggota(id){
-    showLoading(); await loadDashboard(); hideLoading();
-    const a = cacheAnggota.find(x => (x['ID ANGGOTA'] || x.id) === id);
-    if(!a){
-        showAlert('alertPengembalian', 'Anggota tidak ditemukan!', 'error');
-        document.getElementById('kembaliAnggota').value = ''; document.getElementById('kembaliAnggota').focus();
-        return;
-    }
-    
-    // Cek apakah anggota punya peminjaman aktif
-    const pinjamanAktif = cacheTransaksi.filter(t => 
-        (t['ID ANGGOTA'] === id) && 
-        (t['STATUS'] === 'Dipinjam' || t['STATUS'] === '⚠️ Terlambat')
-    );
-    
-    if(pinjamanAktif.length === 0){
-        showAlert('alertPengembalian', 'Anggota tidak memiliki peminjaman aktif!', 'error');
-        document.getElementById('kembaliAnggota').value = ''; document.getElementById('kembaliAnggota').focus();
-        return;
-    }
-    
-    kembaliAnggota = a;
-    document.getElementById('infoKembaliAnggota').innerHTML = `
-        <strong>Anggota:</strong> ${a['NAMA LENGKAP'] || a.nama}<br>
-        <small>${a['KELAS/JURUSAN'] || ''}</small><br>
-        <small style="color:#856404;">⚠️ ${pinjamanAktif.length} buku sedang dipinjam</small>
-    `;
-    document.getElementById('infoKembaliAnggota').style.display = 'block';
-    document.getElementById('kembaliBuku').disabled = false;
-    document.getElementById('kembaliBuku').focus();
-}
-    
-    // Cari transaksi yang cocok (anggota + buku + status Dipinjam)
-    const trx = cacheTransaksi.find(t => 
-        (t['ID ANGGOTA'] === (kembaliAnggota['ID ANGGOTA'] || kembaliAnggota.id)) &&
-        (t['ID BUKU'] === id) &&
-        (t['STATUS'] === 'Dipinjam' || t['STATUS'] === '⚠️ Terlambat')
-    );
-    
-    if(trx){
-        kembaliBuku = trx;
-        document.getElementById('infoKembaliBuku').innerHTML = `
-    <strong>Buku:</strong> ${trx['JUDUL BUKU']}<br>
-    <strong>Tgl Pinjam:</strong> ${formatTanggalJam(trx['TANGGAL PINJAM'])}<br>
-    <strong>Tgl Kembali:</strong> ${formatTanggal(trx['TANGGAL KEMBALI'])}<br>
-    <strong>Status:</strong> ${trx['STATUS']}
-`;
-        document.getElementById('infoKembaliBuku').style.display = 'block';
-        document.getElementById('btnProsesKembali').disabled = false;
-        document.getElementById('btnProsesKembali').focus();
-    } else {
-        showAlert('alertPengembalian', 'Tidak ada peminjaman aktif untuk buku ini oleh anggota tersebut!', 'error');
-        document.getElementById('kembaliBuku').value = ''; document.getElementById('kembaliBuku').focus();
-    }
-}
+<!-- PEMINJAMAN --><div id="peminjaman" class="page"><h2>Peminjaman Buku</h2><div id="alertPeminjaman" class="alert"></div><div class="card"><div class="scanner-ready"><p class="blink">SIAP SCAN</p></div><div style="display:flex;gap:15px;flex-wrap:wrap;"><div style="flex:1;min-width:250px;"><div class="form-group"><label>Scan ID Anggota</label><input type="text" id="pinjamAnggota" placeholder="Scan kartu anggota..." autofocus></div><div id="infoPinjamAnggota" style="display:none;background:#e8f0fe;padding:10px;border-radius:5px;margin:10px 0;"></div><div class="form-group"><label>Tanggal Kembali</label><input type="date" id="tglKembaliPinjam"></div></div><div style="flex:1;min-width:250px;"><div class="form-group"><label>Scan ID Buku</label><input type="text" id="pinjamBuku" placeholder="Scan barcode buku..." disabled></div><div class="keranjang" id="keranjangBuku"><p style="color:#999;">Belum ada buku di-scan</p></div></div></div><div class="btn-group"><button class="btn btn-success" id="btnProsesPinjam" disabled onclick="prosesPinjamMulti()">Proses Peminjaman</button><button class="btn btn-danger" onclick="resetPinjam()">Reset</button></div></div></div>
 
-async function prosesKembaliScan(){
-    if(!kembaliBuku) return;
-    if(!confirm(`Konfirmasi pengembalian?\n\n${kembaliBuku['JUDUL BUKU']}\nAnggota: ${kembaliBuku['NAMA ANGGOTA']}`)) return;
-    
-    showLoading();
-    try {
-        const r = await callAPI('kembali', { idPinjam: kembaliBuku['ID PINJAM'] });
-        hideLoading();
-        if(r.success){
-            showAlert('alertPengembalian', r.message, 'success');
-            resetPengembalian();
-            loadDashboard();
-        } else {
-            showAlert('alertPengembalian', r.message, 'error');
-        }
-    } catch(e) { hideLoading(); showAlert('alertPengembalian', 'Gagal!', 'error'); }
-}
+<!-- PENGEMBALIAN --><div id="pengembalian" class="page"><h2>Pengembalian Buku</h2><div id="alertPengembalian" class="alert"></div><div class="card"><div class="scanner-ready"><p class="blink">SIAP SCAN</p></div><div class="form-group"><label>Scan ID Anggota</label><input type="text" id="kembaliAnggota" placeholder="Scan kartu anggota..." autofocus></div><div id="infoKembaliAnggota" style="display:none;background:#e8f0fe;padding:10px;border-radius:5px;margin:10px 0;"></div><div class="form-group"><label>Scan ID Buku</label><input type="text" id="kembaliBuku" placeholder="Scan barcode buku..." disabled></div><div id="infoKembaliBuku" style="display:none;background:#e8f0fe;padding:10px;border-radius:5px;margin:10px 0;"></div><button class="btn btn-warning" id="btnProsesKembali" disabled onclick="prosesKembaliScan()">Proses Pengembalian</button><button class="btn btn-danger" onclick="resetPengembalian()" style="margin-left:5px;">Reset</button></div></div>
 
-function resetPengembalian(){
-    kembaliAnggota = null;
-    kembaliBuku = null;
-    document.getElementById('kembaliAnggota').value = '';
-    document.getElementById('kembaliBuku').value = '';
-    document.getElementById('kembaliBuku').disabled = true;
-    document.getElementById('btnProsesKembali').disabled = true;
-    document.getElementById('infoKembaliAnggota').style.display = 'none';
-    document.getElementById('infoKembaliBuku').style.display = 'none';
-    document.getElementById('kembaliAnggota').focus();
-}
-        
-        // HISTORY
-        async function loadHistory(){
-            showLoading();
-            try{const r=await callAPI('getTransaksi');if(r.success){cacheTransaksi=r.data;renderHistory();}}catch(e){}
-            hideLoading();
-        }
-        
-        function renderHistory(){
-    document.getElementById('tabelHistory').innerHTML=cacheTransaksi.map(t=>{
-        let sc=t['STATUS']==='Dikembalikan'?'badge-kembali':(t['STATUS']==='⚠️ Terlambat'?'badge-terlambat':'badge-pinjam');
-        return`<tr>
-            <td><strong>${t['ID PINJAM']||''}</strong></td>
-            <td>${formatTanggalJam(t['TANGGAL PINJAM'])}</td>
-            <td>${t['NAMA ANGGOTA']||''}</td>
-            <td>${t['JUDUL BUKU']||''}</td>
-            <td>${formatTanggal(t['TANGGAL KEMBALI'])}</td>
-            <td>${t['TANGGAL DIKEMBALIKAN'] ? formatTanggalJam(t['TANGGAL DIKEMBALIKAN']) : '-'}</td>
-            <td><span class="badge ${sc}">${t['STATUS']||''}</span></td>
-            <td><button class="btn btn-danger" style="font-size:10px;" onclick="hapusHistory('${t['ID PINJAM']}')">Hapus</button></td>
-        </tr>`;
-    }).join('');
-}
-        
-        async function hapusHistory(id){
-            if(!confirm('Yakin hapus transaksi '+id+'?\nStok akan dikembalikan otomatis.'))return;
-            showLoading();
-            try{
-                const r=await callAPI('hapusTransaksi',{idPinjam:id});
-                hideLoading();
-                if(r.success){showAlert('alertHistory',r.message,'success');loadHistory();loadDashboard();}
-                else{showAlert('alertHistory',r.message,'error');}
-            }catch(e){hideLoading();}
-        }
-        
-        // UTILITY
-       // Format tanggal + jam (untuk Tgl Pinjam & Tgl Dikembalikan)
-function formatTanggalJam(dateStr) {
-    if(!dateStr) return '-';
-    const d = new Date(dateStr);
-    const dd = String(d.getDate()).padStart(2, '0');
-    const mm = String(d.getMonth() + 1).padStart(2, '0');
-    const yy = String(d.getFullYear()).slice(2);
-    const hh = String(d.getHours()).padStart(2, '0');
-    const min = String(d.getMinutes()).padStart(2, '0');
-    return `${dd}/${mm}/${yy} ${hh}:${min} WIB`;
-}
+<!-- HISTORY --><div id="history" class="page"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;"><h2>History Transaksi</h2><input type="text" id="searchHistory" placeholder="🔍 Cari..." style="width:250px;padding:8px 12px;border:2px solid #1a73e8;border-radius:8px;font-size:14px;" oninput="filterHistory()"></div><div id="alertHistory" class="alert"></div><button class="btn btn-info" onclick="loadHistory()">Refresh</button><div style="overflow-x:auto;"><table><thead><tr><th>ID</th><th>Tgl Pinjam</th><th>Anggota</th><th>Buku</th><th>Tgl Kembali</th><th>Tgl Dikembalikan</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="tabelHistory"></tbody></table></div></div>
+</div></div>
 
-// Format tanggal saja (untuk Tgl Kembali)
-function formatTanggal(dateStr) {
-    if(!dateStr) return '-';
-    const d = new Date(dateStr);
-    const dd = String(d.getDate()).padStart(2, '0');
-    const mm = String(d.getMonth() + 1).padStart(2, '0');
-    const yy = String(d.getFullYear()).slice(2);
-    return `${dd}/${mm}/${yy}`;
-}
-        function showAlert(id,msg,type){const el=document.getElementById(id);if(!el)return;el.textContent=msg;el.className='alert alert-'+type;el.style.display='block';setTimeout(()=>el.style.display='none',5000);}
-        function printBarcode(type){const data=type==='buku'?cacheBuku:cacheAnggota;let w=window.open('','_blank','width=800,height=600');w.document.write('<!DOCTYPE html><html><head><script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"><\/script><style>@page{size:A4;margin:10mm}body{font-family:Arial;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;padding:10px}.card{border:1px solid #ccc;padding:10px;text-align:center;width:200px;page-break-inside:avoid}@media print{.no-print{display:none}}</style></head><body><button class="no-print" onclick="window.print()" style="position:fixed;top:10px;right:10px;z-index:999;padding:10px 20px;">PRINT</button><div id="c"></div><script>var d='+JSON.stringify(data)+';var t="'+type+'";d.forEach(function(x,i){var id=x["ID '+(type==='buku'?'BUKU':'ANGGOTA')+'"]||x.id||"";var n=t==="buku"?(x["JUDUL BUKU"]||""):(x["NAMA LENGKAP"]||"");document.getElementById("c").innerHTML+=\'<div class="card"><b>\'+n+\'</b><svg id="p-\'+i+\'"></svg><b>\'+id+\'</b></div>\';try{JsBarcode("#p-"+i,id,{format:"CODE128",width:2,height:50,displayValue:false,margin:5})}catch(e){}});<\/script></body></html>');}
-        function downloadBarcode(svgId,filename){const svg=document.getElementById(svgId);if(!svg)return;const clone=svg.cloneNode(true);clone.setAttribute('xmlns','http://www.w3.org/2000/svg');const canvas=document.createElement('canvas');const ctx=canvas.getContext('2d');const img=new Image();img.onload=function(){canvas.width=img.width;canvas.height=img.height;ctx.fillStyle='white';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(img,0,0);const a=document.createElement('a');a.download=filename+'.png';a.href=canvas.toDataURL('image/png');a.click();};img.src='data:image/svg+xml;base64,'+btoa(unescape(encodeURIComponent(new XMLSerializer().serializeToString(clone))));}
-        
-        loadDashboard();
-        setInterval(()=>{if(document.getElementById('mainSystem').style.display==='block'){const ap=document.querySelector('.page.active');if(ap&&ap.id==='dashboard')loadDashboard();}},30000);
-    </script>
+<script>
+if(sessionStorage.getItem('loggedIn')==='true'){document.getElementById('loginPage').style.display='none';document.getElementById('mainSystem').style.display='block';loadDashboard();updateClock();setInterval(updateClock,1000);}
+async function login(){const u=document.getElementById('username').value,p=document.getElementById('password').value;if(!u||!p){document.getElementById('loginError').style.display='block';return;}showLoading();try{const r=await callAPI('login',{username:u,password:p});hideLoading();if(r.success){sessionStorage.setItem('loggedIn','true');document.getElementById('loginPage').style.display='none';document.getElementById('mainSystem').style.display='block';loadDashboard();updateClock();setInterval(updateClock,1000);}else{document.getElementById('loginError').style.display='block';document.getElementById('loginError').textContent=r.message;document.getElementById('password').value='';document.getElementById('password').focus();}}catch(e){hideLoading();document.getElementById('loginError').style.display='block';}}
+function logout(){sessionStorage.removeItem('loggedIn');window.location.href='https://perpussmaalaziz.github.io/perpus/';}
+document.getElementById('password').addEventListener('keydown',function(e){if(e.key==='Enter')login();});
+document.getElementById('username').addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('password').focus();});
+
+const API_URL='https://script.google.com/macros/s/AKfycbyNUC7lbDSaIUa-khRTlbOnJ5_g1q9FXql8Fs3453f9NcFGx7Xk-2LwZRX0SpMGNHk_WQ/exec';
+let cacheBuku=[],cacheAnggota=[],cacheTransaksi=[];
+let pinjamAnggota=null,pinjamBukuList=[],kembaliAnggota=null,kembaliBuku=null;
+
+async function callAPI(action,data={}){data.action=action;const r=await fetch(API_URL,{method:'POST',body:JSON.stringify(data)});return await r.json();}
+function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));document.getElementById(id).classList.add('active');const nb=document.getElementById('nav-'+id);if(nb)nb.classList.add('active');if(id==='dashboard')loadDashboard();if(id==='buku')loadBuku();if(id==='anggota')loadAnggota();if(id==='peminjaman')initPeminjaman();if(id==='pengembalian')initPengembalian();if(id==='history')loadHistory();}
+function updateClock(){const c=document.getElementById('clock');if(c)c.textContent=new Date().toLocaleString('id-ID');}
+function showLoading(){document.getElementById('loading').style.display='block';}
+function hideLoading(){document.getElementById('loading').style.display='none';}
+
+async function loadDashboard(){showLoading();try{const[br,ar,tr]=await Promise.all([callAPI('getBuku'),callAPI('getAnggota'),callAPI('getTransaksi')]);if(br.success)cacheBuku=br.data;if(ar.success)cacheAnggota=ar.data;if(tr.success)cacheTransaksi=tr.data;document.getElementById('totalBuku').textContent=cacheBuku.length;document.getElementById('totalAnggota').textContent=cacheAnggota.length;document.getElementById('totalDipinjam').textContent=cacheTransaksi.filter(t=>t['STATUS']==='Dipinjam'||t['STATUS']==='⚠️ Terlambat').length;document.getElementById('totalTerlambat').textContent=cacheTransaksi.filter(t=>t['STATUS']==='⚠️ Terlambat').length;}catch(e){}hideLoading();}
+
+async function loadBuku(){showLoading();try{const r=await callAPI('getBuku');if(r.success){cacheBuku=r.data;renderBuku();}}catch(e){}hideLoading();}
+function renderBuku(){document.getElementById('tabelBuku').innerHTML=cacheBuku.map((b,i)=>{const id=b['ID BUKU']||b.id||'';return`<tr><td><div style="display:flex;align-items:center;gap:8px;"><svg id="bc-buku-${i}"></svg><button class="btn btn-success" style="font-size:10px;" onclick="downloadBarcode('bc-buku-${i}','${id}')">Download</button></div></td><td>${id}</td><td>${b['JUDUL BUKU']||''}</td><td>${b['PENGARANG']||''}</td><td>${b['PENERBIT']||''}</td><td>${b['TAHUN']||''}</td><td><strong>${b['STOK']||0}</strong></td><td><button class="btn btn-warning" style="font-size:10px;" onclick="editBuku('${id}')">Edit</button></td></tr>`;}).join('');setTimeout(()=>cacheBuku.forEach((b,i)=>{try{const s=document.getElementById(`bc-buku-${i}`);if(s)JsBarcode(s,b['ID BUKU']||b.id||'',{format:"CODE128",width:2,height:50,displayValue:true,fontSize:12,margin:8});}catch(e){}}),200);}
+function showFormBuku(){document.getElementById('formBuku').style.display='block';document.getElementById('editBukuId').value='';document.getElementById('idBuku').value='';document.getElementById('idBuku').disabled=false;document.getElementById('judulBuku').value='';document.getElementById('pengarangBuku').value='';document.getElementById('penerbitBuku').value='';document.getElementById('tahunBuku').value='';document.getElementById('stokBuku').value='1';}
+function editBuku(id){const b=cacheBuku.find(x=>(x['ID BUKU']||x.id)===id);if(!b)return;document.getElementById('formBuku').style.display='block';document.getElementById('editBukuId').value=id;document.getElementById('idBuku').value=id;document.getElementById('idBuku').disabled=true;document.getElementById('judulBuku').value=b['JUDUL BUKU']||'';document.getElementById('pengarangBuku').value=b['PENGARANG']||'';document.getElementById('penerbitBuku').value=b['PENERBIT']||'';document.getElementById('tahunBuku').value=b['TAHUN']||'';document.getElementById('stokBuku').value=b['STOK']||1;document.getElementById('formBuku').scrollIntoView({behavior:'smooth'});}
+async function simpanBuku(){const id=document.getElementById('idBuku').value,judul=document.getElementById('judulBuku').value;if(!id||!judul){showAlert('alertBuku','ID dan Judul wajib diisi!','error');return;}showLoading();try{const eid=document.getElementById('editBukuId').value;const d={idBuku:id,judul,pengarang:document.getElementById('pengarangBuku').value,penerbit:document.getElementById('penerbitBuku').value,tahun:document.getElementById('tahunBuku').value,stok:parseInt(document.getElementById('stokBuku').value)};const r=await callAPI(eid?'editBuku':'tambahBuku',d);hideLoading();if(r.success){showAlert('alertBuku',r.message,'success');batalBuku();loadBuku();loadDashboard();}else{showAlert('alertBuku',r.message,'error');}}catch(e){hideLoading();showAlert('alertBuku','Gagal!','error');}}
+function batalBuku(){document.getElementById('formBuku').style.display='none';}
+
+async function loadAnggota(){showLoading();try{const r=await callAPI('getAnggota');if(r.success){cacheAnggota=r.data;renderAnggota();}}catch(e){}hideLoading();}
+function renderAnggota(){document.getElementById('tabelAnggota').innerHTML=cacheAnggota.map((a,i)=>{const id=a['ID ANGGOTA']||a.id||'';return`<tr><td><div style="display:flex;align-items:center;gap:8px;"><svg id="bc-anggota-${i}"></svg><button class="btn btn-success" style="font-size:10px;" onclick="downloadBarcode('bc-anggota-${i}','${id}')">Download</button></div></td><td>${id}</td><td>${a['NAMA LENGKAP']||''}</td><td>${a['KELAS/JURUSAN']||''}</td><td>${a['NO TELEPON']||''}</td><td><button class="btn btn-warning" style="font-size:10px;" onclick="editAnggota('${id}')">Edit</button></td></tr>`;}).join('');setTimeout(()=>cacheAnggota.forEach((a,i)=>{try{const s=document.getElementById(`bc-anggota-${i}`);if(s)JsBarcode(s,a['ID ANGGOTA']||a.id||'',{format:"CODE128",width:2,height:50,displayValue:true,fontSize:12,margin:8});}catch(e){}}),200);}
+function showFormAnggota(){document.getElementById('formAnggota').style.display='block';document.getElementById('editAnggotaId').value='';document.getElementById('idAnggota').value='';document.getElementById('idAnggota').disabled=false;document.getElementById('namaAnggota').value='';document.getElementById('kelasAnggota').value='';document.getElementById('telpAnggota').value='';}
+function editAnggota(id){const a=cacheAnggota.find(x=>(x['ID ANGGOTA']||x.id)===id);if(!a)return;document.getElementById('formAnggota').style.display='block';document.getElementById('editAnggotaId').value=id;document.getElementById('idAnggota').value=id;document.getElementById('idAnggota').disabled=true;document.getElementById('namaAnggota').value=a['NAMA LENGKAP']||'';document.getElementById('kelasAnggota').value=a['KELAS/JURUSAN']||'';document.getElementById('telpAnggota').value=a['NO TELEPON']||'';document.getElementById('formAnggota').scrollIntoView({behavior:'smooth'});}
+async function simpanAnggota(){const id=document.getElementById('idAnggota').value,nama=document.getElementById('namaAnggota').value;if(!id||!nama){showAlert('alertAnggota','ID dan Nama wajib diisi!','error');return;}showLoading();try{const eid=document.getElementById('editAnggotaId').value;const d={idAnggota:id,nama,kelas:document.getElementById('kelasAnggota').value,telp:document.getElementById('telpAnggota').value};const r=await callAPI(eid?'editAnggota':'tambahAnggota',d);hideLoading();if(r.success){showAlert('alertAnggota',r.message,'success');batalAnggota();loadAnggota();loadDashboard();}else{showAlert('alertAnggota',r.message,'error');}}catch(e){hideLoading();showAlert('alertAnggota','Gagal!','error');}}
+function batalAnggota(){document.getElementById('formAnggota').style.display='none';}
+
+// PEMINJAMAN
+function initPeminjaman(){document.getElementById('pinjamAnggota').disabled=false;document.getElementById('pinjamAnggota').focus();document.getElementById('pinjamAnggota').onkeydown=function(e){if(e.key==='Enter'){e.preventDefault();const id=this.value.trim();if(id)cekPinjamAnggota(id);}};document.getElementById('pinjamBuku').onkeydown=function(e){if(e.key==='Enter'){e.preventDefault();const id=this.value.trim();if(id)tambahBukuKeKeranjang(id);}};const today=new Date();today.setDate(today.getDate()+7);document.getElementById('tglKembaliPinjam').value=today.toISOString().split('T')[0];}
+async function cekPinjamAnggota(id){showLoading();await loadDashboard();hideLoading();const a=cacheAnggota.find(x=>(x['ID ANGGOTA']||x.id)===id);if(a){pinjamAnggota=a;document.getElementById('infoPinjamAnggota').innerHTML=`<strong>Anggota:</strong> ${a['NAMA LENGKAP']||a.nama}<br><small>${a['KELAS/JURUSAN']||''}</small>`;document.getElementById('infoPinjamAnggota').style.display='block';document.getElementById('pinjamBuku').disabled=false;document.getElementById('pinjamBuku').focus();}else{showAlert('alertPeminjaman','Anggota tidak ditemukan!','error');document.getElementById('pinjamAnggota').value='';document.getElementById('pinjamAnggota').focus();}}
+async function tambahBukuKeKeranjang(id){showLoading();await loadDashboard();hideLoading();const b=cacheBuku.find(x=>(x['ID BUKU']||x.id)===id);if(!b){showAlert('alertPeminjaman','Buku tidak ditemukan!','error');document.getElementById('pinjamBuku').value='';document.getElementById('pinjamBuku').focus();return;}if((b['STOK']||0)<=0){showAlert('alertPeminjaman','Stok habis!','error');document.getElementById('pinjamBuku').value='';document.getElementById('pinjamBuku').focus();return;}if(pinjamBukuList.find(x=>x.id===id)){showAlert('alertPeminjaman','Buku sudah di keranjang!','error');document.getElementById('pinjamBuku').value='';document.getElementById('pinjamBuku').focus();return;}if(pinjamBukuList.length>=10){showAlert('alertPeminjaman','Maksimal 10 buku!','error');return;}pinjamBukuList.push({id:id,judul:b['JUDUL BUKU']||b.judul});renderKeranjang();document.getElementById('pinjamBuku').value='';document.getElementById('pinjamBuku').focus();document.getElementById('btnProsesPinjam').disabled=false;}
+function renderKeranjang(){const k=document.getElementById('keranjangBuku');if(pinjamBukuList.length===0){k.innerHTML='<p style="color:#999;">Belum ada buku di-scan</p>';}else{k.innerHTML=pinjamBukuList.map((b,i)=>`<div class="keranjang-item"><span>${b.id} - ${b.judul}</span><button class="btn btn-danger" style="font-size:10px;" onclick="hapusDariKeranjang(${i})">X</button></div>`).join('');}}
+function hapusDariKeranjang(i){pinjamBukuList.splice(i,1);renderKeranjang();if(pinjamBukuList.length===0)document.getElementById('btnProsesPinjam').disabled=true;}
+async function prosesPinjamMulti(){if(!pinjamAnggota||pinjamBukuList.length===0)return;const tgl=document.getElementById('tglKembaliPinjam').value;if(!tgl){showAlert('alertPeminjaman','Pilih tanggal kembali!','error');return;}showLoading();let success=[],gagal=[];for(const b of pinjamBukuList){const today=new Date().toISOString().split('T')[0];try{const r=await callAPI('pinjam',{idAnggota:pinjamAnggota['ID ANGGOTA']||pinjamAnggota.id,idBuku:b.id,tglPinjam:today,tglKembali:tgl});if(r.success)success.push(b.judul);else gagal.push(b.judul+' ('+r.message+')');}catch(e){gagal.push(b.judul);}}hideLoading();let msg='';if(success.length>0)msg+=`✅ ${success.length} buku berhasil dipinjam!\n`;if(gagal.length>0)msg+=`❌ Gagal: ${gagal.join(', ')}`;showAlert('alertPeminjaman',msg,success.length>0?'success':'error');resetPinjam();loadDashboard();}
+function resetPinjam(){pinjamAnggota=null;pinjamBukuList=[];document.getElementById('pinjamAnggota').value='';document.getElementById('pinjamBuku').value='';document.getElementById('pinjamBuku').disabled=true;document.getElementById('btnProsesPinjam').disabled=true;document.getElementById('infoPinjamAnggota').style.display='none';renderKeranjang();document.getElementById('pinjamAnggota').focus();}
+
+// PENGEMBALIAN
+function initPengembalian(){document.getElementById('kembaliAnggota').disabled=false;document.getElementById('kembaliAnggota').focus();document.getElementById('kembaliAnggota').onkeydown=function(e){if(e.key==='Enter'){e.preventDefault();const id=this.value.trim();if(id)cekKembaliAnggota(id);}};document.getElementById('kembaliBuku').onkeydown=function(e){if(e.key==='Enter'){e.preventDefault();const id=this.value.trim();if(id)cekKembaliBuku(id);}};}
+async function cekKembaliAnggota(id){showLoading();await loadDashboard();hideLoading();const a=cacheAnggota.find(x=>(x['ID ANGGOTA']||x.id)===id);if(!a){showAlert('alertPengembalian','Anggota tidak ditemukan!','error');document.getElementById('kembaliAnggota').value='';document.getElementById('kembaliAnggota').focus();return;}const pinjamanAktif=cacheTransaksi.filter(t=>(t['ID ANGGOTA']===id)&&(t['STATUS']==='Dipinjam'||t['STATUS']==='⚠️ Terlambat'));if(pinjamanAktif.length===0){showAlert('alertPengembalian','Anggota tidak memiliki peminjaman aktif!','error');document.getElementById('kembaliAnggota').value='';document.getElementById('kembaliAnggota').focus();return;}kembaliAnggota=a;document.getElementById('infoKembaliAnggota').innerHTML=`<strong>Anggota:</strong> ${a['NAMA LENGKAP']||a.nama}<br><small>${a['KELAS/JURUSAN']||''}</small><br><small style="color:#856404;">⚠️ ${pinjamanAktif.length} buku sedang dipinjam</small>`;document.getElementById('infoKembaliAnggota').style.display='block';document.getElementById('kembaliBuku').disabled=false;document.getElementById('kembaliBuku').focus();}
+async function cekKembaliBuku(id){showLoading();await loadDashboard();hideLoading();const b=cacheBuku.find(x=>(x['ID BUKU']||x.id)===id);if(!b){showAlert('alertPengembalian','Buku tidak ditemukan!','error');document.getElementById('kembaliBuku').value='';document.getElementById('kembaliBuku').focus();return;}const trx=cacheTransaksi.find(t=>(t['ID ANGGOTA']===(kembaliAnggota['ID ANGGOTA']||kembaliAnggota.id))&&(t['ID BUKU']===id)&&(t['STATUS']==='Dipinjam'||t['STATUS']==='⚠️ Terlambat'));if(trx){kembaliBuku=trx;document.getElementById('infoKembaliBuku').innerHTML=`<strong>Buku:</strong> ${trx['JUDUL BUKU']}<br><strong>Tgl Pinjam:</strong> ${formatTanggalJam(trx['TANGGAL PINJAM'])}<br><strong>Tgl Kembali:</strong> ${formatTanggal(trx['TANGGAL KEMBALI'])}<br><strong>Status:</strong> ${trx['STATUS']}`;document.getElementById('infoKembaliBuku').style.display='block';document.getElementById('btnProsesKembali').disabled=false;document.getElementById('btnProsesKembali').focus();}else{showAlert('alertPengembalian','Tidak ada peminjaman aktif untuk buku ini oleh anggota tersebut!','error');document.getElementById('kembaliBuku').value='';document.getElementById('kembaliBuku').focus();}}
+async function prosesKembaliScan(){if(!kembaliBuku)return;if(!confirm(`Konfirmasi pengembalian?\n\n${kembaliBuku['JUDUL BUKU']}\nAnggota: ${kembaliBuku['NAMA ANGGOTA']}`))return;showLoading();try{const r=await callAPI('kembali',{idPinjam:kembaliBuku['ID PINJAM']});hideLoading();if(r.success){showAlert('alertPengembalian',r.message,'success');resetPengembalian();loadDashboard();}else{showAlert('alertPengembalian',r.message,'error');}}catch(e){hideLoading();showAlert('alertPengembalian','Gagal!','error');}}
+function resetPengembalian(){kembaliAnggota=null;kembaliBuku=null;document.getElementById('kembaliAnggota').value='';document.getElementById('kembaliBuku').value='';document.getElementById('kembaliBuku').disabled=true;document.getElementById('btnProsesKembali').disabled=true;document.getElementById('infoKembaliAnggota').style.display='none';document.getElementById('infoKembaliBuku').style.display='none';document.getElementById('kembaliAnggota').focus();}
+
+// HISTORY
+async function loadHistory(){showLoading();try{const r=await callAPI('getTransaksi');if(r.success){cacheTransaksi=r.data;renderHistory();}}catch(e){}hideLoading();}
+function renderHistory(){document.getElementById('tabelHistory').innerHTML=cacheTransaksi.map(t=>{let sc=t['STATUS']==='Dikembalikan'?'badge-kembali':(t['STATUS']==='⚠️ Terlambat'?'badge-terlambat':'badge-pinjam');return`<tr><td><strong>${t['ID PINJAM']||''}</strong></td><td>${formatTanggalJam(t['TANGGAL PINJAM'])}</td><td>${t['NAMA ANGGOTA']||''}</td><td>${t['JUDUL BUKU']||''}</td><td>${formatTanggal(t['TANGGAL KEMBALI'])}</td><td>${t['TANGGAL DIKEMBALIKAN']?formatTanggalJam(t['TANGGAL DIKEMBALIKAN']):'-'}</td><td><span class="badge ${sc}">${t['STATUS']||''}</span></td><td><button class="btn btn-danger" style="font-size:10px;" onclick="hapusHistory('${t['ID PINJAM']}')">Hapus</button></td></tr>`;}).join('');}
+async function hapusHistory(id){if(!confirm('Yakin hapus transaksi '+id+'?\nStok akan dikembalikan otomatis.'))return;showLoading();try{const r=await callAPI('hapusTransaksi',{idPinjam:id});hideLoading();if(r.success){showAlert('alertHistory',r.message,'success');loadHistory();loadDashboard();}else{showAlert('alertHistory',r.message,'error');}}catch(e){hideLoading();}}
+
+// UTILITY
+function formatTanggalJam(d){if(!d)return'-';const dt=new Date(d);return`${String(dt.getDate()).padStart(2,'0')}/${String(dt.getMonth()+1).padStart(2,'0')}/${String(dt.getFullYear()).slice(2)} ${String(dt.getHours()).padStart(2,'0')}:${String(dt.getMinutes()).padStart(2,'0')} WIB`;}
+function formatTanggal(d){if(!d)return'-';const dt=new Date(d);return`${String(dt.getDate()).padStart(2,'0')}/${String(dt.getMonth()+1).padStart(2,'0')}/${String(dt.getFullYear()).slice(2)}`;}
+function showAlert(id,msg,type){const el=document.getElementById(id);if(!el)return;el.textContent=msg;el.className='alert alert-'+type;el.style.display='block';setTimeout(()=>el.style.display='none',5000);}
+function printBarcode(type){const data=type==='buku'?cacheBuku:cacheAnggota;let w=window.open('','_blank','width=800,height=600');w.document.write('<!DOCTYPE html><html><head><script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"><\/script><style>@page{size:A4;margin:10mm}body{font-family:Arial;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;padding:10px}.card{border:1px solid #ccc;padding:10px;text-align:center;width:200px}@media print{.no-print{display:none}}</style></head><body><button class="no-print" onclick="window.print()" style="position:fixed;top:10px;right:10px;z-index:999;padding:10px 20px;">PRINT</button><div id="c"></div><script>var d='+JSON.stringify(data)+';d.forEach(function(x,i){var id=x["ID '+(type==='buku'?'BUKU':'ANGGOTA')+'"]||x.id||"";var n="'+(type==='buku'?'x["JUDUL BUKU"]':'x["NAMA LENGKAP"]')+"||"";document.getElementById("c").innerHTML+=\'<div class="card"><b>\'+n+\'</b><svg id="p-\'+i+\'"></svg><b>\'+id+\'</b></div>\';try{JsBarcode("#p-"+i,id,{format:"CODE128",width:2,height:50,displayValue:false,margin:5})}catch(e){}});<\/script></body></html>');}
+function downloadBarcode(svgId,filename){const svg=document.getElementById(svgId);if(!svg)return;const clone=svg.cloneNode(true);clone.setAttribute('xmlns','http://www.w3.org/2000/svg');const canvas=document.createElement('canvas');const ctx=canvas.getContext('2d');const img=new Image();img.onload=function(){canvas.width=img.width;canvas.height=img.height;ctx.fillStyle='white';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(img,0,0);const a=document.createElement('a');a.download=filename+'.png';a.href=canvas.toDataURL('image/png');a.click();};img.src='data:image/svg+xml;base64,'+btoa(unescape(encodeURIComponent(new XMLSerializer().serializeToString(clone))));}
+
+// FILTER
+function filterBuku(){const kw=document.getElementById('searchBuku').value.toLowerCase();const f=cacheBuku.filter(b=>(b['ID BUKU']||'').toLowerCase().includes(kw)||(b['JUDUL BUKU']||'').toLowerCase().includes(kw)||(b['PENGARANG']||'').toLowerCase().includes(kw)||(b['PENERBIT']||'').toLowerCase().includes(kw));renderBukuFiltered(f);}
+function renderBukuFiltered(data){document.getElementById('tabelBuku').innerHTML=data.map((b,i)=>{const id=b['ID BUKU']||b.id||'';return`<tr><td><div style="display:flex;align-items:center;gap:8px;"><svg id="bc-buku-s-${i}"></svg><button class="btn btn-success" style="font-size:10px;" onclick="downloadBarcode('bc-buku-s-${i}','${id}')">Download</button></div></td><td>${id}</td><td>${b['JUDUL BUKU']||''}</td><td>${b['PENGARANG']||''}</td><td>${b['PENERBIT']||''}</td><td>${b['TAHUN']||''}</td><td><strong>${b['STOK']||0}</strong></td><td><button class="btn btn-warning" style="font-size:10px;" onclick="editBuku('${id}')">Edit</button></td></tr>`;}).join('');setTimeout(()=>data.forEach((b,i)=>{try{const s=document.getElementById(`bc-buku-s-${i}`);if(s)JsBarcode(s,b['ID BUKU']||b.id||'',{format:"CODE128",width:2,height:50,displayValue:true,fontSize:12,margin:8});}catch(e){}}),200);}
+function filterAnggota(){const kw=document.getElementById('searchAnggota').value.toLowerCase();const f=cacheAnggota.filter(a=>(a['ID ANGGOTA']||'').toLowerCase().includes(kw)||(a['NAMA LENGKAP']||'').toLowerCase().includes(kw)||(a['KELAS/JURUSAN']||'').toLowerCase().includes(kw));renderAnggotaFiltered(f);}
+function renderAnggotaFiltered(data){document.getElementById('tabelAnggota').innerHTML=data.map((a,i)=>{const id=a['ID ANGGOTA']||a.id||'';return`<tr><td><div style="display:flex;align-items:center;gap:8px;"><svg id="bc-anggota-s-${i}"></svg><button class="btn btn-success" style="font-size:10px;" onclick="downloadBarcode('bc-anggota-s-${i}','${id}')">Download</button></div></td><td>${id}</td><td>${a['NAMA LENGKAP']||''}</td><td>${a['KELAS/JURUSAN']||''}</td><td>${a['NO TELEPON']||''}</td><td><button class="btn btn-warning" style="font-size:10px;" onclick="editAnggota('${id}')">Edit</button></td></tr>`;}).join('');setTimeout(()=>data.forEach((a,i)=>{try{const s=document.getElementById(`bc-anggota-s-${i}`);if(s)JsBarcode(s,a['ID ANGGOTA']||a.id||'',{format:"CODE128",width:2,height:50,displayValue:true,fontSize:12,margin:8});}catch(e){}}),200);}
+function filterHistory(){const kw=document.getElementById('searchHistory').value.toLowerCase();const f=cacheTransaksi.filter(t=>(t['ID PINJAM']||'').toLowerCase().includes(kw)||(t['NAMA ANGGOTA']||'').toLowerCase().includes(kw)||(t['JUDUL BUKU']||'').toLowerCase().includes(kw)||(t['STATUS']||'').toLowerCase().includes(kw));renderHistoryFiltered(f);}
+function renderHistoryFiltered(data){document.getElementById('tabelHistory').innerHTML=data.map(t=>{let sc=t['STATUS']==='Dikembalikan'?'badge-kembali':(t['STATUS']==='⚠️ Terlambat'?'badge-terlambat':'badge-pinjam');return`<tr><td><strong>${t['ID PINJAM']||''}</strong></td><td>${formatTanggalJam(t['TANGGAL PINJAM'])}</td><td>${t['NAMA ANGGOTA']||''}</td><td>${t['JUDUL BUKU']||''}</td><td>${formatTanggal(t['TANGGAL KEMBALI'])}</td><td>${t['TANGGAL DIKEMBALIKAN']?formatTanggalJam(t['TANGGAL DIKEMBALIKAN']):'-'}</td><td><span class="badge ${sc}">${t['STATUS']||''}</span></td><td><button class="btn btn-danger" style="font-size:10px;" onclick="hapusHistory('${t['ID PINJAM']}')">Hapus</button></td></tr>`;}).join('');}
+
+loadDashboard();
+setInterval(()=>{if(document.getElementById('mainSystem').style.display==='block'){const ap=document.querySelector('.page.active');if(ap&&ap.id==='dashboard')loadDashboard();}},30000);
+</script>
 </body>
 </html>
