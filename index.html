@@ -350,11 +350,11 @@
         const id = b['ID BUKU'] || b.id || '';
         return `<tr>
             <td>
-                <div class="barcode-cell">
-                    <svg id="bc-buku-${i}"></svg>
-                    <button class="btn btn-success" style="margin-top:5px; padding:5px 10px; font-size:11px;" onclick="downloadBarcode('bc-buku-${i}', '${id}')">Download</button>
-                </div>
-            </td>
+    <div style="display:flex; align-items:center; gap:10px;">
+        <svg id="bc-buku-${i}"></svg>
+        <button class="btn btn-success" style="padding:5px 10px; font-size:11px; white-space:nowrap;" onclick="downloadBarcode('bc-buku-${i}', '${id}')">Download</button>
+    </div>
+</td>
             <td>${id}</td>
             <td>${b['JUDUL BUKU'] || b.judul || ''}</td>
             <td>${b['PENGARANG'] || b.pengarang || ''}</td>
@@ -391,11 +391,11 @@
         const id = a['ID ANGGOTA'] || a.id || '';
         return `<tr>
             <td>
-                <div class="barcode-cell">
-                    <svg id="bc-anggota-${i}"></svg>
-                    <button class="btn btn-success" style="margin-top:5px; padding:5px 10px; font-size:11px;" onclick="downloadBarcode('bc-anggota-${i}', '${id}')">Download</button>
-                </div>
-            </td>
+    <div style="display:flex; align-items:center; gap:10px;">
+        <svg id="bc-anggota-${i}"></svg>
+        <button class="btn btn-success" style="padding:5px 10px; font-size:11px; white-space:nowrap;" onclick="downloadBarcode('bc-anggota-${i}', '${id}')">Download</button>
+    </div>
+</td>
             <td>${id}</td>
             <td>${a['NAMA LENGKAP'] || a.nama || ''}</td>
             <td>${a['KELAS/JURUSAN'] || a.kelas || ''}</td>
