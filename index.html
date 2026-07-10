@@ -371,40 +371,6 @@
             document.getElementById('pinjamAnggota').focus();
         }
         
-        // PENGEMBALIAN
-        function initPengembalian(){
-            document.getElementById('kembaliId').disabled=false;
-            document.getElementById('kembaliId').focus();
-            document.getElementById('kembaliId').onkeydown=function(e){if(e.key==='Enter'){e.preventDefault();const id=this.value.trim();if(id)cekPengembalian(id);}};
-        }
-        
-        async function cekPengembalian(id){
-            showLoading();await loadDashboard();hideLoading();
-            const t=cacheTransaksi.find(x=>x['ID PINJAM']===id&&(x['STATUS']==='Dipinjam'||x['STATUS']==='⚠️ Terlambat'));
-            if(t){
-                kembaliTransaksi=t;
-                document.getElementById('infoPengembalian').innerHTML=`<strong>ID:</strong> ${t['ID PINJAM']}<br><strong>Anggota:</strong> ${t['NAMA ANGGOTA']}<br><strong>Buku:</strong> ${t['JUDUL BUKU']}<br><strong>Tgl Pinjam:</strong> ${t['TANGGAL PINJAM']}<br><strong>Status:</strong> ${t['STATUS']}`;
-                document.getElementById('infoPengembalian').style.display='block';
-                document.getElementById('btnProsesKembali').disabled=false;
-                document.getElementById('btnProsesKembali').focus();
-            }else{
-                showAlert('alertPengembalian','Transaksi tidak ditemukan!','error');
-                document.getElementById('kembaliId').value='';document.getElementById('kembaliId').focus();
-            }
-        }
-        
-        async function prosesKembaliScan(){
-            if(!kembaliTransaksi)return;
-            if(!confirm('Konfirmasi pengembalian?'))return;
-            showLoading();
-            try{
-                const r=await callAPI('kembali',{idPinjam:kembaliTransaksi['ID PINJAM']});
-                hideLoading();
-                if(r.success){showAlert('alertPengembalian',r.message,'success');resetPengembalian();loadDashboard();}
-                else{showAlert('alertPengembalian',r.message,'error');}
-            }catch(e){hideLoading();showAlert('alertPengembalian','Gagal!','error');}
-        }
-        
         // PENGEMBALIAN (SCAN ANGGOTA + BUKU)
 let kembaliAnggota = null, kembaliBuku = null;
 
@@ -454,8 +420,8 @@ async function cekKembaliBuku(id){
         kembaliBuku = trx;
         document.getElementById('infoKembaliBuku').innerHTML = `
             <strong>Buku:</strong> ${trx['JUDUL BUKU']}<br>
-            <strong>Tgl Pinjam:</strong> ${trx['TANGGAL PINJAM']}<br>
-            <strong>Tgl Kembali:</strong> ${trx['TANGGAL KEMBALI']}<br>
+            <strong>Tgl Pinjam:</strong> ${formatTanggal(trx['TANGGAL PINJAM'])}<br>
+            <strong>Tgl Kembali:</strong> ${formatTanggal(trx['TANGGAL KEMBALI'])}<br>
             <strong>Status:</strong> ${trx['STATUS']}
         `;
         document.getElementById('infoKembaliBuku').style.display = 'block';
@@ -507,7 +473,7 @@ function resetPengembalian(){
         function renderHistory(){
             document.getElementById('tabelHistory').innerHTML=cacheTransaksi.map(t=>{
                 let sc=t['STATUS']==='Dikembalikan'?'badge-kembali':(t['STATUS']==='⚠️ Terlambat'?'badge-terlambat':'badge-pinjam');
-                return`<tr><td><strong>${t['ID PINJAM']||''}</strong></td><td>${t['TANGGAL PINJAM']||''}</td><td>${t['NAMA ANGGOTA']||''}</td><td>${t['JUDUL BUKU']||''}</td><td>${t['TANGGAL KEMBALI']||''}</td><td>${t['TANGGAL DIKEMBALIKAN']||'-'}</td><td><span class="badge ${sc}">${t['STATUS']||''}</span></td><td><button class="btn btn-danger" style="font-size:10px;" onclick="hapusHistory('${t['ID PINJAM']}')">Hapus</button></td></tr>`;
+                return`<tr><td><strong>${t['ID PINJAM']||''}</strong></td><td>${formatTanggal(t['TANGGAL PINJAM'])}</td><td>${t['NAMA ANGGOTA']||''}</td><td>${t['JUDUL BUKU']||''}</td><td>${formatTanggal(t['TANGGAL KEMBALI'])}</td><td>${t['TANGGAL DIKEMBALIKAN'] ? formatTanggal(t['TANGGAL DIKEMBALIKAN']) : '-'}</td><td><span class="badge ${sc}">${t['STATUS']||''}</span></td><td><button class="btn btn-danger" style="font-size:10px;" onclick="hapusHistory('${t['ID PINJAM']}')">Hapus</button></td></tr>`;
             }).join('');
         }
         
@@ -523,6 +489,16 @@ function resetPengembalian(){
         }
         
         // UTILITY
+        function formatTanggal(dateStr) {
+    if(!dateStr) return '-';
+    const d = new Date(dateStr);
+    const dd = String(d.getDate()).padStart(2, '0');
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const yy = String(d.getFullYear()).slice(2);
+    const hh = String(d.getHours()).padStart(2, '0');
+    const min = String(d.getMinutes()).padStart(2, '0');
+    return `${dd}/${mm}/${yy} ${hh}:${min} WIB`;
+}
         function showAlert(id,msg,type){const el=document.getElementById(id);if(!el)return;el.textContent=msg;el.className='alert alert-'+type;el.style.display='block';setTimeout(()=>el.style.display='none',5000);}
         function printBarcode(type){const data=type==='buku'?cacheBuku:cacheAnggota;let w=window.open('','_blank','width=800,height=600');w.document.write('<!DOCTYPE html><html><head><script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"><\/script><style>@page{size:A4;margin:10mm}body{font-family:Arial;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;padding:10px}.card{border:1px solid #ccc;padding:10px;text-align:center;width:200px;page-break-inside:avoid}@media print{.no-print{display:none}}</style></head><body><button class="no-print" onclick="window.print()" style="position:fixed;top:10px;right:10px;z-index:999;padding:10px 20px;">PRINT</button><div id="c"></div><script>var d='+JSON.stringify(data)+';var t="'+type+'";d.forEach(function(x,i){var id=x["ID '+(type==='buku'?'BUKU':'ANGGOTA')+'"]||x.id||"";var n=t==="buku"?(x["JUDUL BUKU"]||""):(x["NAMA LENGKAP"]||"");document.getElementById("c").innerHTML+=\'<div class="card"><b>\'+n+\'</b><svg id="p-\'+i+\'"></svg><b>\'+id+\'</b></div>\';try{JsBarcode("#p-"+i,id,{format:"CODE128",width:2,height:50,displayValue:false,margin:5})}catch(e){}});<\/script></body></html>');}
         function downloadBarcode(svgId,filename){const svg=document.getElementById(svgId);if(!svg)return;const clone=svg.cloneNode(true);clone.setAttribute('xmlns','http://www.w3.org/2000/svg');const canvas=document.createElement('canvas');const ctx=canvas.getContext('2d');const img=new Image();img.onload=function(){canvas.width=img.width;canvas.height=img.height;ctx.fillStyle='white';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(img,0,0);const a=document.createElement('a');a.download=filename+'.png';a.href=canvas.toDataURL('image/png');a.click();};img.src='data:image/svg+xml;base64,'+btoa(unescape(encodeURIComponent(new XMLSerializer().serializeToString(clone))));}
