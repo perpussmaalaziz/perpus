@@ -345,29 +345,35 @@
         }
         
         function renderBuku() {
-            const tbody = document.getElementById('tabelBuku');
-            tbody.innerHTML = cacheBuku.map((b, i) => {
+    const tbody = document.getElementById('tabelBuku');
+    tbody.innerHTML = cacheBuku.map((b, i) => {
+        const id = b['ID BUKU'] || b.id || '';
+        return `<tr>
+            <td>
+                <div class="barcode-cell">
+                    <svg id="bc-buku-${i}"></svg>
+                    <div class="barcode-id">${id}</div>
+                    <button class="btn btn-success" style="margin-top:5px; padding:5px 10px; font-size:11px;" onclick="downloadBarcode('bc-buku-${i}', '${id}')">Download</button>
+                </div>
+            </td>
+            <td>${id}</td>
+            <td>${b['JUDUL BUKU'] || b.judul || ''}</td>
+            <td>${b['PENGARANG'] || b.pengarang || ''}</td>
+            <td>${b['PENERBIT'] || b.penerbit || ''}</td>
+            <td>${b['TAHUN'] || b.tahun || ''}</td>
+            <td><strong>${b['STOK'] || b.stok || 0}</strong></td>
+        </tr>`;
+    }).join('');
+    setTimeout(() => {
+        cacheBuku.forEach((b, i) => {
+            try {
+                const svg = document.getElementById(`bc-buku-${i}`);
                 const id = b['ID BUKU'] || b.id || '';
-                return `<tr>
-                    <td><div class="barcode-cell"><svg id="bc-buku-${i}"></svg><div class="barcode-id">${id}</div></div></td>
-                    <td>${id}</td>
-                    <td>${b['JUDUL BUKU'] || b.judul || ''}</td>
-                    <td>${b['PENGARANG'] || b.pengarang || ''}</td>
-                    <td>${b['PENERBIT'] || b.penerbit || ''}</td>
-                    <td>${b['TAHUN'] || b.tahun || ''}</td>
-                    <td><strong>${b['STOK'] || b.stok || 0}</strong></td>
-                </tr>`;
-            }).join('');
-            setTimeout(() => {
-                cacheBuku.forEach((b, i) => {
-                    try {
-                        const svg = document.getElementById(`bc-buku-${i}`);
-                        const id = b['ID BUKU'] || b.id || '';
-                        if(svg && id) JsBarcode(svg, id, {format: "CODE128", width: 1.5, height: 40, displayValue: false});
-                    } catch(e) {}
-                });
-            }, 100);
-        }
+                if(svg && id) JsBarcode(svg, id, {format: "CODE128", width: 2, height: 60, displayValue: true, fontSize: 14, margin: 10});
+            } catch(e) {}
+        });
+    }, 200);
+}
         
         function showFormBuku() { document.getElementById('formBuku').style.display = 'block'; }
         function batalBuku() { document.getElementById('formBuku').style.display = 'none'; }
@@ -381,27 +387,33 @@
         }
         
         function renderAnggota() {
-            const tbody = document.getElementById('tabelAnggota');
-            tbody.innerHTML = cacheAnggota.map((a, i) => {
+    const tbody = document.getElementById('tabelAnggota');
+    tbody.innerHTML = cacheAnggota.map((a, i) => {
+        const id = a['ID ANGGOTA'] || a.id || '';
+        return `<tr>
+            <td>
+                <div class="barcode-cell">
+                    <svg id="bc-anggota-${i}"></svg>
+                    <div class="barcode-id">${id}</div>
+                    <button class="btn btn-success" style="margin-top:5px; padding:5px 10px; font-size:11px;" onclick="downloadBarcode('bc-anggota-${i}', '${id}')">Download</button>
+                </div>
+            </td>
+            <td>${id}</td>
+            <td>${a['NAMA LENGKAP'] || a.nama || ''}</td>
+            <td>${a['KELAS/JURUSAN'] || a.kelas || ''}</td>
+            <td>${a['NO TELEPON'] || a.telp || ''}</td>
+        </tr>`;
+    }).join('');
+    setTimeout(() => {
+        cacheAnggota.forEach((a, i) => {
+            try {
+                const svg = document.getElementById(`bc-anggota-${i}`);
                 const id = a['ID ANGGOTA'] || a.id || '';
-                return `<tr>
-                    <td><div class="barcode-cell"><svg id="bc-anggota-${i}"></svg><div class="barcode-id">${id}</div></div></td>
-                    <td>${id}</td>
-                    <td>${a['NAMA LENGKAP'] || a.nama || ''}</td>
-                    <td>${a['KELAS/JURUSAN'] || a.kelas || ''}</td>
-                    <td>${a['NO TELEPON'] || a.telp || ''}</td>
-                </tr>`;
-            }).join('');
-            setTimeout(() => {
-                cacheAnggota.forEach((a, i) => {
-                    try {
-                        const svg = document.getElementById(`bc-anggota-${i}`);
-                        const id = a['ID ANGGOTA'] || a.id || '';
-                        if(svg && id) JsBarcode(svg, id, {format: "CODE128", width: 1.5, height: 40, displayValue: false});
-                    } catch(e) {}
-                });
-            }, 100);
-        }
+                if(svg && id) JsBarcode(svg, id, {format: "CODE128", width: 2, height: 60, displayValue: true, fontSize: 14, margin: 10});
+            } catch(e) {}
+        });
+    }, 200);
+}
         
         function showFormAnggota() { document.getElementById('formAnggota').style.display = 'block'; }
         function batalAnggota() { document.getElementById('formAnggota').style.display = 'none'; }
@@ -558,7 +570,36 @@
             let printWindow = window.open('', '_blank', 'width=800,height=600');
             printWindow.document.write('<!DOCTYPE html><html><head><title>Print Barcode ' + label + '</title><script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"><\/script><style>@page{size:A4;margin:10mm}body{font-family:Arial;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;padding:10px}.barcode-card{border:1px solid #ccc;padding:10px;text-align:center;width:200px;page-break-inside:avoid}.barcode-card .label{font-size:11px;color:#666;margin-bottom:5px}.barcode-card .nama{font-size:13px;font-weight:bold;margin-bottom:8px}.barcode-card .id{font-size:14px;font-weight:bold;margin-top:5px;color:#333}.barcode-card svg{display:block;margin:0 auto}@media print{.no-print{display:none}}</style></head><body><button class="no-print" onclick="window.print()" style="margin:10px;padding:10px 20px;font-size:16px;cursor:pointer;position:fixed;top:10px;right:10px;z-index:999;">PRINT SEKARANG</button><div id="barcode-container"></div><script>var data=' + JSON.stringify(data) + ';var type="' + type + '";var container=document.getElementById("barcode-container");data.forEach(function(item,i){var card=document.createElement("div");card.className="barcode-card";var id=item["ID ' + (type==='buku'?'BUKU':'ANGGOTA') + '"]||item.id||"";var nama=type==="buku"?(item["JUDUL BUKU"]||item.judul||""):(item["NAMA LENGKAP"]||item.nama||"");var info=type==="buku"?(item["PENGARANG"]||item.pengarang||""):(item["KELAS/JURUSAN"]||item.kelas||"");card.innerHTML=\'<div class="label">\'+(type==="buku"?"BUKU":"ANGGOTA")+\'</div><div class="nama">\'+nama+\'</div><svg id="bc-print-\'+i+\'"></svg><div class="id">\'+id+\'</div><div style="font-size:10px;color:#888;">\'+info+\'</div>\';container.appendChild(card);try{JsBarcode("#bc-print-"+i,id,{format:"CODE128",width:2,height:60,displayValue:false,margin:5})}catch(e){}});<\/script></body></html>');
         }
+        function downloadBarcode(svgId, filename) {
+    const svg = document.getElementById(svgId);
+    if(!svg) return;
+    
+    // Clone SVG
+    const clone = svg.cloneNode(true);
+    clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+    
+    // Convert to canvas
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const svgData = new XMLSerializer().serializeToString(clone);
+    const img = new Image();
+    
+    img.onload = function() {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.fillStyle = 'white';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0);
         
+        // Download
+        const link = document.createElement('a');
+        link.download = filename + '.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+    };
+    
+    img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)));
+}
         function generateBarcodeAll() {
             loadBuku().then(() => loadAnggota());
             showAlert('alertBuku', 'Barcode berhasil digenerate!', 'success');
