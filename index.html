@@ -86,7 +86,7 @@
     <div class="login-container" id="loginPage">
         <div class="login-box">
             <h1>SISTEM PERPUSTAKAAN</h1>
-            <p>SMA AL-AZIZ BANGIL</p>
+            <p>MA Al-Aziz</p>
             
             <div class="form-group">
                 <label>Username</label>
@@ -246,8 +246,8 @@
         // ============================================
         // LOGIN
         // ============================================
-        const VALID_USERNAME = 'adminperpus';
-        const VALID_PASSWORD = 'perpus2026';
+        const VALID_USERNAME = 'admin';
+        const VALID_PASSWORD = 'perpus2024';
         
         if(sessionStorage.getItem('loggedIn') === 'true') {
             document.getElementById('loginPage').style.display = 'none';
@@ -352,7 +352,6 @@
             <td>
                 <div class="barcode-cell">
                     <svg id="bc-buku-${i}"></svg>
-                    <div class="barcode-id">${id}</div>
                     <button class="btn btn-success" style="margin-top:5px; padding:5px 10px; font-size:11px;" onclick="downloadBarcode('bc-buku-${i}', '${id}')">Download</button>
                 </div>
             </td>
@@ -394,7 +393,6 @@
             <td>
                 <div class="barcode-cell">
                     <svg id="bc-anggota-${i}"></svg>
-                    <div class="barcode-id">${id}</div>
                     <button class="btn btn-success" style="margin-top:5px; padding:5px 10px; font-size:11px;" onclick="downloadBarcode('bc-anggota-${i}', '${id}')">Download</button>
                 </div>
             </td>
