@@ -258,7 +258,7 @@
         }
         
         // BUKU & ANGGOTA (sama seperti sebelumnya)
-        async function loadBuku(){showLoading();try{const r=await callAPI('getBuku');if(r.success){cacheBuku=r.data;renderBuku();}}catch(e){}hideLoading();}
+        async function loadBuku(){try{const r=await callAPI('getBuku');if(r.success){cacheBuku=r.data;renderBuku();}}catch(e){}}
         function renderBuku(){
             document.getElementById('tabelBuku').innerHTML=cacheBuku.map((b,i)=>{
                 const id=b['ID BUKU']||b.id||'';
@@ -271,7 +271,7 @@
         async function simpanBuku(){const id=document.getElementById('idBuku').value,judul=document.getElementById('judulBuku').value;if(!id||!judul){showAlert('alertBuku','ID dan Judul wajib diisi!','error');return;}showLoading();try{const eid=document.getElementById('editBukuId').value;const d={idBuku:id,judul,pengarang:document.getElementById('pengarangBuku').value,penerbit:document.getElementById('penerbitBuku').value,tahun:document.getElementById('tahunBuku').value,stok:parseInt(document.getElementById('stokBuku').value)};const r=await callAPI(eid?'editBuku':'tambahBuku',d);hideLoading();if(r.success){showAlert('alertBuku',r.message,'success');batalBuku();loadBuku();loadDashboard();}else{showAlert('alertBuku',r.message,'error');}}catch(e){hideLoading();showAlert('alertBuku','Gagal!','error');}}
         function batalBuku(){document.getElementById('formBuku').style.display='none';}
         
-        async function loadAnggota(){showLoading();try{const r=await callAPI('getAnggota');if(r.success){cacheAnggota=r.data;renderAnggota();}}catch(e){}hideLoading();}
+        async function loadAnggota(){try{const r=await callAPI('getAnggota');if(r.success){cacheAnggota=r.data;renderAnggota();}}catch(e){}}
         function renderAnggota(){
             document.getElementById('tabelAnggota').innerHTML=cacheAnggota.map((a,i)=>{
                 const id=a['ID ANGGOTA']||a.id||'';
@@ -464,11 +464,7 @@ function resetPengembalian(){
 }
         
         // HISTORY
-        async function loadHistory(){
-            showLoading();
-            try{const r=await callAPI('getTransaksi');if(r.success){cacheTransaksi=r.data;renderHistory();}}catch(e){}
-            hideLoading();
-        }
+        async function loadHistory(){try{const r=await callAPI('getTransaksi');if(r.success){cacheTransaksi=r.data;renderHistory();}}catch(e){}}
         
         function renderHistory(){
             document.getElementById('tabelHistory').innerHTML=cacheTransaksi.map(t=>{
