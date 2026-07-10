@@ -492,12 +492,15 @@ function resetPengembalian(){
        function formatTanggal(dateStr) {
     if(!dateStr) return '-';
     const d = new Date(dateStr);
-    d.setHours(d.getHours() + 7);
     const dd = String(d.getDate()).padStart(2, '0');
     const mm = String(d.getMonth() + 1).padStart(2, '0');
     const yy = String(d.getFullYear()).slice(2);
-    const hh = String(d.getHours()).padStart(2, '0');
-    const min = String(d.getMinutes()).padStart(2, '0');
+    
+    // Ambil jam & menit dari waktu lokal browser
+    const now = new Date();
+    const hh = String(now.getHours()).padStart(2, '0');
+    const min = String(now.getMinutes()).padStart(2, '0');
+    
     return `${dd}/${mm}/${yy} ${hh}:${min} WIB`;
 }
         function showAlert(id,msg,type){const el=document.getElementById(id);if(!el)return;el.textContent=msg;el.className='alert alert-'+type;el.style.display='block';setTimeout(()=>el.style.display='none',5000);}
