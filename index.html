@@ -394,26 +394,34 @@ function initPengembalian(){
 async function cekKembaliAnggota(id){
     showLoading(); await loadDashboard(); hideLoading();
     const a = cacheAnggota.find(x => (x['ID ANGGOTA'] || x.id) === id);
-    if(a){
-        kembaliAnggota = a;
-        document.getElementById('infoKembaliAnggota').innerHTML = `<strong>Anggota:</strong> ${a['NAMA LENGKAP'] || a.nama}<br><small>${a['KELAS/JURUSAN'] || ''}</small>`;
-        document.getElementById('infoKembaliAnggota').style.display = 'block';
-        document.getElementById('kembaliBuku').disabled = false;
-        document.getElementById('kembaliBuku').focus();
-    } else {
+    if(!a){
         showAlert('alertPengembalian', 'Anggota tidak ditemukan!', 'error');
         document.getElementById('kembaliAnggota').value = ''; document.getElementById('kembaliAnggota').focus();
-    }
-}
-
-async function cekKembaliBuku(id){
-    showLoading(); await loadDashboard(); hideLoading();
-    const b = cacheBuku.find(x => (x['ID BUKU'] || x.id) === id);
-    if(!b){
-        showAlert('alertPengembalian', 'Buku tidak ditemukan!', 'error');
-        document.getElementById('kembaliBuku').value = ''; document.getElementById('kembaliBuku').focus();
         return;
     }
+    
+    // Cek apakah anggota punya peminjaman aktif
+    const pinjamanAktif = cacheTransaksi.filter(t => 
+        (t['ID ANGGOTA'] === id) && 
+        (t['STATUS'] === 'Dipinjam' || t['STATUS'] === '⚠️ Terlambat')
+    );
+    
+    if(pinjamanAktif.length === 0){
+        showAlert('alertPengembalian', 'Anggota tidak memiliki peminjaman aktif!', 'error');
+        document.getElementById('kembaliAnggota').value = ''; document.getElementById('kembaliAnggota').focus();
+        return;
+    }
+    
+    kembaliAnggota = a;
+    document.getElementById('infoKembaliAnggota').innerHTML = `
+        <strong>Anggota:</strong> ${a['NAMA LENGKAP'] || a.nama}<br>
+        <small>${a['KELAS/JURUSAN'] || ''}</small><br>
+        <small style="color:#856404;">⚠️ ${pinjamanAktif.length} buku sedang dipinjam</small>
+    `;
+    document.getElementById('infoKembaliAnggota').style.display = 'block';
+    document.getElementById('kembaliBuku').disabled = false;
+    document.getElementById('kembaliBuku').focus();
+}
     
     // Cari transaksi yang cocok (anggota + buku + status Dipinjam)
     const trx = cacheTransaksi.find(t => 
