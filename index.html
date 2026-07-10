@@ -164,16 +164,19 @@
             </div>
             
             <!-- PENGEMBALIAN (SCAN) -->
-            <div id="pengembalian" class="page">
-                <h2>Pengembalian Buku</h2>
-                <div id="alertPengembalian" class="alert"></div>
-                <div class="card">
-                    <div class="scanner-ready"><p class="blink">SIAP SCAN</p></div>
-                    <div class="form-group"><label>Scan ID Peminjaman</label><input type="text" id="kembaliId" placeholder="Scan ID peminjaman..." autofocus></div>
-                    <div id="infoPengembalian" style="display:none; background:#e8f0fe; padding:10px; border-radius:5px; margin:10px 0;"></div>
-                    <button class="btn btn-warning" id="btnProsesKembali" disabled onclick="prosesKembaliScan()">Proses Pengembalian</button>
-                </div>
-            </div>
+<div id="pengembalian" class="page">
+    <h2>Pengembalian Buku</h2>
+    <div id="alertPengembalian" class="alert"></div>
+    <div class="card">
+        <div class="scanner-ready"><p class="blink">SIAP SCAN</p></div>
+        <div class="form-group"><label>Scan ID Anggota</label><input type="text" id="kembaliAnggota" placeholder="Scan kartu anggota..." autofocus></div>
+        <div id="infoKembaliAnggota" style="display:none; background:#e8f0fe; padding:10px; border-radius:5px; margin:10px 0;"></div>
+        <div class="form-group"><label>Scan ID Buku</label><input type="text" id="kembaliBuku" placeholder="Scan barcode buku..." disabled></div>
+        <div id="infoKembaliBuku" style="display:none; background:#e8f0fe; padding:10px; border-radius:5px; margin:10px 0;"></div>
+        <button class="btn btn-warning" id="btnProsesKembali" disabled onclick="prosesKembaliScan()">Proses Pengembalian</button>
+        <button class="btn btn-danger" onclick="resetPengembalian()" style="margin-left:5px;">Reset</button>
+    </div>
+</div>
             
             <!-- HISTORY -->
             <div id="history" class="page">
@@ -402,13 +405,97 @@
             }catch(e){hideLoading();showAlert('alertPengembalian','Gagal!','error');}
         }
         
-        function resetPengembalian(){
-            kembaliTransaksi=null;
-            document.getElementById('kembaliId').value='';
-            document.getElementById('btnProsesKembali').disabled=true;
-            document.getElementById('infoPengembalian').style.display='none';
-            document.getElementById('kembaliId').focus();
+        // PENGEMBALIAN (SCAN ANGGOTA + BUKU)
+let kembaliAnggota = null, kembaliBuku = null;
+
+function initPengembalian(){
+    document.getElementById('kembaliAnggota').disabled = false;
+    document.getElementById('kembaliAnggota').focus();
+    document.getElementById('kembaliAnggota').onkeydown = function(e){
+        if(e.key === 'Enter'){ e.preventDefault(); const id = this.value.trim(); if(id) cekKembaliAnggota(id); }
+    };
+    document.getElementById('kembaliBuku').onkeydown = function(e){
+        if(e.key === 'Enter'){ e.preventDefault(); const id = this.value.trim(); if(id) cekKembaliBuku(id); }
+    };
+}
+
+async function cekKembaliAnggota(id){
+    showLoading(); await loadDashboard(); hideLoading();
+    const a = cacheAnggota.find(x => (x['ID ANGGOTA'] || x.id) === id);
+    if(a){
+        kembaliAnggota = a;
+        document.getElementById('infoKembaliAnggota').innerHTML = `<strong>Anggota:</strong> ${a['NAMA LENGKAP'] || a.nama}<br><small>${a['KELAS/JURUSAN'] || ''}</small>`;
+        document.getElementById('infoKembaliAnggota').style.display = 'block';
+        document.getElementById('kembaliBuku').disabled = false;
+        document.getElementById('kembaliBuku').focus();
+    } else {
+        showAlert('alertPengembalian', 'Anggota tidak ditemukan!', 'error');
+        document.getElementById('kembaliAnggota').value = ''; document.getElementById('kembaliAnggota').focus();
+    }
+}
+
+async function cekKembaliBuku(id){
+    showLoading(); await loadDashboard(); hideLoading();
+    const b = cacheBuku.find(x => (x['ID BUKU'] || x.id) === id);
+    if(!b){
+        showAlert('alertPengembalian', 'Buku tidak ditemukan!', 'error');
+        document.getElementById('kembaliBuku').value = ''; document.getElementById('kembaliBuku').focus();
+        return;
+    }
+    
+    // Cari transaksi yang cocok (anggota + buku + status Dipinjam)
+    const trx = cacheTransaksi.find(t => 
+        (t['ID ANGGOTA'] === (kembaliAnggota['ID ANGGOTA'] || kembaliAnggota.id)) &&
+        (t['ID BUKU'] === id) &&
+        (t['STATUS'] === 'Dipinjam' || t['STATUS'] === '⚠️ Terlambat')
+    );
+    
+    if(trx){
+        kembaliBuku = trx;
+        document.getElementById('infoKembaliBuku').innerHTML = `
+            <strong>Buku:</strong> ${trx['JUDUL BUKU']}<br>
+            <strong>Tgl Pinjam:</strong> ${trx['TANGGAL PINJAM']}<br>
+            <strong>Tgl Kembali:</strong> ${trx['TANGGAL KEMBALI']}<br>
+            <strong>Status:</strong> ${trx['STATUS']}
+        `;
+        document.getElementById('infoKembaliBuku').style.display = 'block';
+        document.getElementById('btnProsesKembali').disabled = false;
+        document.getElementById('btnProsesKembali').focus();
+    } else {
+        showAlert('alertPengembalian', 'Tidak ada peminjaman aktif untuk buku ini oleh anggota tersebut!', 'error');
+        document.getElementById('kembaliBuku').value = ''; document.getElementById('kembaliBuku').focus();
+    }
+}
+
+async function prosesKembaliScan(){
+    if(!kembaliBuku) return;
+    if(!confirm(`Konfirmasi pengembalian?\n\n${kembaliBuku['JUDUL BUKU']}\nAnggota: ${kembaliBuku['NAMA ANGGOTA']}`)) return;
+    
+    showLoading();
+    try {
+        const r = await callAPI('kembali', { idPinjam: kembaliBuku['ID PINJAM'] });
+        hideLoading();
+        if(r.success){
+            showAlert('alertPengembalian', r.message, 'success');
+            resetPengembalian();
+            loadDashboard();
+        } else {
+            showAlert('alertPengembalian', r.message, 'error');
         }
+    } catch(e) { hideLoading(); showAlert('alertPengembalian', 'Gagal!', 'error'); }
+}
+
+function resetPengembalian(){
+    kembaliAnggota = null;
+    kembaliBuku = null;
+    document.getElementById('kembaliAnggota').value = '';
+    document.getElementById('kembaliBuku').value = '';
+    document.getElementById('kembaliBuku').disabled = true;
+    document.getElementById('btnProsesKembali').disabled = true;
+    document.getElementById('infoKembaliAnggota').style.display = 'none';
+    document.getElementById('infoKembaliBuku').style.display = 'none';
+    document.getElementById('kembaliAnggota').focus();
+}
         
         // HISTORY
         async function loadHistory(){
