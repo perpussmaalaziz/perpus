@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem Perpustakaan SMA Al-Aziz Bangil</title>
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
         body { background: #f0f2f5; }
@@ -73,7 +74,30 @@
 </div>
 <div class="container"><div class="loading" id="loading"><div class="spinner"></div><p>Memuat data...</p></div>
 
-<!-- DASHBOARD --><div id="dashboard" class="page active"><h2>Dashboard</h2><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;margin:15px 0;"><div style="background:#e8f0fe;padding:20px;border-radius:10px;text-align:center;"><h3>Total Buku</h3><p style="font-size:32px;font-weight:bold;" id="totalBuku">-</p></div><div style="background:#d4edda;padding:20px;border-radius:10px;text-align:center;"><h3>Total Anggota</h3><p style="font-size:32px;font-weight:bold;" id="totalAnggota">-</p></div><div style="background:#fff3cd;padding:20px;border-radius:10px;text-align:center;"><h3>Sedang Dipinjam</h3><p style="font-size:32px;font-weight:bold;" id="totalDipinjam">-</p></div><div style="background:#f8d7da;padding:20px;border-radius:10px;text-align:center;"><h3>Terlambat</h3><p style="font-size:32px;font-weight:bold;" id="totalTerlambat">-</p></div></div><button class="btn btn-info" onclick="loadDashboard()">Refresh</button></div>
+<!-- DASHBOARD -->
+<div id="dashboard" class="page active">
+    <h2>Dashboard</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;margin:15px 0;">
+        <div style="background:#e8f0fe;padding:20px;border-radius:10px;text-align:center;"><h3>Total Buku</h3><p style="font-size:32px;font-weight:bold;" id="totalBuku">-</p></div>
+        <div style="background:#d4edda;padding:20px;border-radius:10px;text-align:center;"><h3>Total Anggota</h3><p style="font-size:32px;font-weight:bold;" id="totalAnggota">-</p></div>
+        <div style="background:#fff3cd;padding:20px;border-radius:10px;text-align:center;"><h3>Sedang Dipinjam</h3><p style="font-size:32px;font-weight:bold;" id="totalDipinjam">-</p></div>
+        <div style="background:#f8d7da;padding:20px;border-radius:10px;text-align:center;"><h3>Terlambat</h3><p style="font-size:32px;font-weight:bold;" id="totalTerlambat">-</p></div>
+    </div>
+    
+    <!-- GRAFIK -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;margin:15px 0;">
+        <div style="background:white;padding:15px;border-radius:10px;box-shadow:0 2px 4px rgba(0,0,0,0.1);">
+            <h3 style="margin-bottom:10px;">Peminjaman per Bulan</h3>
+            <canvas id="chartBulanan" height="200"></canvas>
+        </div>
+        <div style="background:white;padding:15px;border-radius:10px;box-shadow:0 2px 4px rgba(0,0,0,0.1);">
+            <h3 style="margin-bottom:10px;">Buku Terpopuler</h3>
+            <canvas id="chartBuku" height="200"></canvas>
+        </div>
+    </div>
+    
+    <button class="btn btn-info" onclick="loadDashboard()">Refresh</button>
+</div>
 
 <!-- DATA BUKU --><div id="buku" class="page"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;"><h2>Data Buku</h2><input type="text" id="searchBuku" placeholder="Cari..." style="width:250px;padding:8px 12px;border:2px solid #1a73e8;border-radius:8px;font-size:14px;" oninput="filterBuku()"></div><div id="alertBuku" class="alert"></div><div class="btn-group"><button class="btn btn-primary" onclick="showFormBuku()">+ Tambah Buku</button><button class="btn btn-success" onclick="printBarcode('buku')">Print Barcode</button><button class="btn btn-info" onclick="loadBuku()">Refresh</button></div><div id="formBuku" style="display:none;" class="card"><input type="hidden" id="editBukuId"><div class="form-group"><label>ID Buku</label><input type="text" id="idBuku" placeholder="B001"></div><div class="form-group"><label>Judul</label><input type="text" id="judulBuku"></div><div class="form-group"><label>Pengarang</label><input type="text" id="pengarangBuku"></div><div class="form-group"><label>Penerbit</label><input type="text" id="penerbitBuku"></div><div class="form-group"><label>Tahun</label><input type="number" id="tahunBuku"></div><div class="form-group"><label>Stok</label><input type="number" id="stokBuku" value="1"></div><div class="btn-group"><button class="btn btn-success" onclick="simpanBuku()">Simpan</button><button class="btn btn-danger" onclick="batalBuku()">Batal</button></div></div><div style="overflow-x:auto;"><table><thead><tr><th>Barcode</th><th>ID</th><th>Judul</th><th>Pengarang</th><th>Penerbit</th><th>Tahun</th><th>Stok</th><th>Aksi</th></tr></thead><tbody id="tabelBuku"></tbody></table></div></div>
 
@@ -103,7 +127,24 @@ function updateClock(){const c=document.getElementById('clock');if(c)c.textConte
 function showLoading(){document.getElementById('loading').style.display='block';}
 function hideLoading(){document.getElementById('loading').style.display='none';}
 
-async function loadDashboard(){showLoading();try{const[br,ar,tr]=await Promise.all([callAPI('getBuku'),callAPI('getAnggota'),callAPI('getTransaksi')]);if(br.success)cacheBuku=br.data;if(ar.success)cacheAnggota=ar.data;if(tr.success)cacheTransaksi=tr.data;document.getElementById('totalBuku').textContent=cacheBuku.length;document.getElementById('totalAnggota').textContent=cacheAnggota.length;document.getElementById('totalDipinjam').textContent=cacheTransaksi.filter(t=>t['STATUS']==='Dipinjam'||t['STATUS']==='⚠️ Terlambat').length;document.getElementById('totalTerlambat').textContent=cacheTransaksi.filter(t=>t['STATUS']==='⚠️ Terlambat').length;}catch(e){}hideLoading();}
+async function loadDashboard(){
+    showLoading();
+    try{
+        const[br,ar,tr]=await Promise.all([callAPI('getBuku'),callAPI('getAnggota'),callAPI('getTransaksi')]);
+        if(br.success)cacheBuku=br.data;
+        if(ar.success)cacheAnggota=ar.data;
+        if(tr.success)cacheTransaksi=tr.data;
+        
+        document.getElementById('totalBuku').textContent=cacheBuku.length;
+        document.getElementById('totalAnggota').textContent=cacheAnggota.length;
+        document.getElementById('totalDipinjam').textContent=cacheTransaksi.filter(t=>t['STATUS']==='Dipinjam'||t['STATUS']==='⚠️ Terlambat').length;
+        document.getElementById('totalTerlambat').textContent=cacheTransaksi.filter(t=>t['STATUS']==='⚠️ Terlambat').length;
+        
+        renderChartBulanan();
+        renderChartBukuPopuler();
+    }catch(e){}
+    hideLoading();
+}
 
 async function loadBuku(){showLoading();try{const r=await callAPI('getBuku');if(r.success){cacheBuku=r.data;renderBuku();}}catch(e){}hideLoading();}
 function renderBuku(){document.getElementById('tabelBuku').innerHTML=cacheBuku.map((b,i)=>{const id=b['ID BUKU']||b.id||'';return`<tr><td><div style="display:flex;align-items:center;gap:8px;"><svg id="bc-buku-${i}"></svg><button class="btn btn-success" style="font-size:10px;" onclick="downloadBarcode('bc-buku-${i}','${id}')">Download</button></div></td><td>${id}</td><td>${b['JUDUL BUKU']||''}</td><td>${b['PENGARANG']||''}</td><td>${b['PENERBIT']||''}</td><td>${b['TAHUN']||''}</td><td><strong>${b['STOK']||0}</strong></td><td><button class="btn btn-warning" style="font-size:10px;" onclick="editBuku('${id}')">Edit</button></td></tr>`;}).join('');setTimeout(()=>cacheBuku.forEach((b,i)=>{try{const s=document.getElementById(`bc-buku-${i}`);if(s)JsBarcode(s,b['ID BUKU']||b.id||'',{format:"CODE128",width:2,height:50,displayValue:true,fontSize:12,margin:8});}catch(e){}}),200);}
@@ -141,6 +182,85 @@ function renderHistory(){document.getElementById('tabelHistory').innerHTML=cache
 async function hapusHistory(id){if(!confirm('Yakin hapus transaksi '+id+'?\nStok akan dikembalikan otomatis.'))return;showLoading();try{const r=await callAPI('hapusTransaksi',{idPinjam:id});hideLoading();if(r.success){showAlert('alertHistory',r.message,'success');loadHistory();loadDashboard();}else{showAlert('alertHistory',r.message,'error');}}catch(e){hideLoading();}}
 
 // UTILITY
+// GRAFIK
+let chartBulanan, chartBuku;
+
+function renderChartBulanan(){
+    const ctx = document.getElementById('chartBulanan');
+    if(!ctx) return;
+    
+    // Hitung per bulan (6 bulan terakhir)
+    const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+    const now = new Date();
+    const labels = [];
+    const data = [];
+    
+    for(let i=5; i>=0; i--){
+        const d = new Date(now.getFullYear(), now.getMonth()-i, 1);
+        labels.push(months[d.getMonth()]+' '+String(d.getFullYear()).slice(2));
+        const count = cacheTransaksi.filter(t=>{
+            if(!t['TANGGAL PINJAM']) return false;
+            const td = new Date(t['TANGGAL PINJAM']);
+            return td.getMonth()===d.getMonth() && td.getFullYear()===d.getFullYear();
+        }).length;
+        data.push(count);
+    }
+    
+    if(chartBulanan) chartBulanan.destroy();
+    chartBulanan = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Peminjaman',
+                data: data,
+                backgroundColor: '#1a73e8',
+                borderRadius: 5
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+        }
+    });
+}
+
+function renderChartBukuPopuler(){
+    const ctx = document.getElementById('chartBuku');
+    if(!ctx) return;
+    
+    // Hitung buku paling sering dipinjam
+    const count = {};
+    cacheTransaksi.forEach(t=>{
+        const judul = t['JUDUL BUKU']||'Unknown';
+        count[judul] = (count[judul]||0)+1;
+    });
+    
+    const sorted = Object.entries(count).sort((a,b)=>b[1]-a[1]).slice(0,5);
+    const labels = sorted.map(s=>s[0].length>20?s[0].slice(0,20)+'...':s[0]);
+    const data = sorted.map(s=>s[1]);
+    
+    if(chartBuku) chartBuku.destroy();
+    chartBuku = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Dipinjam',
+                data: data,
+                backgroundColor: ['#1a73e8','#28a745','#ffc107','#dc3545','#17a2b8'],
+                borderRadius: 5
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: { x: { beginAtZero: true, ticks: { stepSize: 1 } } }
+        }
+    });
+}
 function formatTanggalJam(d){if(!d)return'-';const dt=new Date(d);return`${String(dt.getDate()).padStart(2,'0')}/${String(dt.getMonth()+1).padStart(2,'0')}/${String(dt.getFullYear()).slice(2)} ${String(dt.getHours()).padStart(2,'0')}:${String(dt.getMinutes()).padStart(2,'0')} WIB`;}
 function formatTanggal(d){if(!d)return'-';const dt=new Date(d);return`${String(dt.getDate()).padStart(2,'0')}/${String(dt.getMonth()+1).padStart(2,'0')}/${String(dt.getFullYear()).slice(2)}`;}
 function showAlert(id,msg,type){const el=document.getElementById(id);if(!el)return;el.textContent=msg;el.className='alert alert-'+type;el.style.display='block';setTimeout(()=>el.style.display='none',5000);}
