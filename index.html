@@ -145,23 +145,29 @@
                 <div style="overflow-x:auto;"><table><thead><tr><th>Barcode</th><th>ID</th><th>Nama</th><th>Kelas</th><th>No Telp</th><th>Aksi</th></tr></thead><tbody id="tabelAnggota"></tbody></table></div>
             </div>
             
-            <!-- PEMINJAMAN (SCAN) -->
-            <div id="peminjaman" class="page">
-                <h2>Peminjaman Buku</h2>
-                <div id="alertPeminjaman" class="alert"></div>
-                <div class="card">
-                    <div class="scanner-ready"><p class="blink">SIAP SCAN</p></div>
-                    <div class="form-group"><label>Scan ID Anggota</label><input type="text" id="pinjamAnggota" placeholder="Scan kartu anggota..." autofocus></div>
-                    <div id="infoPinjamAnggota" style="display:none; background:#e8f0fe; padding:10px; border-radius:5px; margin:10px 0;"></div>
-                    <div class="form-group"><label>Scan ID Buku</label><input type="text" id="pinjamBuku" placeholder="Scan barcode buku..." disabled></div>
-                    <div class="keranjang" id="keranjangBuku"><p style="color:#999;">Belum ada buku di-scan</p></div>
-                    <div class="form-group"><label>Tanggal Kembali</label><input type="date" id="tglKembaliPinjam"></div>
-                    <div class="btn-group">
-                        <button class="btn btn-success" id="btnProsesPinjam" disabled onclick="prosesPinjamMulti()">Proses Peminjaman</button>
-                        <button class="btn btn-danger" onclick="resetPinjam()">Reset</button>
-                    </div>
-                </div>
+           <!-- PEMINJAMAN (SCAN) -->
+<div id="peminjaman" class="page">
+    <h2>Peminjaman Buku</h2>
+    <div id="alertPeminjaman" class="alert"></div>
+    <div class="card">
+        <div class="scanner-ready"><p class="blink">SIAP SCAN</p></div>
+        <div style="display:flex; gap:15px; flex-wrap:wrap;">
+            <div style="flex:1; min-width:250px;">
+                <div class="form-group"><label>Scan ID Anggota</label><input type="text" id="pinjamAnggota" placeholder="Scan kartu anggota..." autofocus></div>
+                <div id="infoPinjamAnggota" style="display:none; background:#e8f0fe; padding:10px; border-radius:5px; margin:10px 0;"></div>
+                <div class="form-group"><label>Tanggal Kembali</label><input type="date" id="tglKembaliPinjam"></div>
             </div>
+            <div style="flex:1; min-width:250px;">
+                <div class="form-group"><label>Scan ID Buku</label><input type="text" id="pinjamBuku" placeholder="Scan barcode buku..." disabled></div>
+                <div class="keranjang" id="keranjangBuku"><p style="color:#999;">Belum ada buku di-scan</p></div>
+            </div>
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-success" id="btnProsesPinjam" disabled onclick="prosesPinjamMulti()">Proses Peminjaman</button>
+            <button class="btn btn-danger" onclick="resetPinjam()">Reset</button>
+        </div>
+    </div>
+</div>
             
             <!-- PENGEMBALIAN (SCAN) -->
 <div id="pengembalian" class="page">
