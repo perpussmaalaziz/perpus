@@ -82,7 +82,7 @@
     </style>
 </head>
 <body>
-    <!-- HALAMAN LOGIN -->
+    
     <div class="login-container" id="loginPage">
         <div class="login-box">
             <h1>SISTEM PERPUSTAKAAN</h1>
@@ -102,7 +102,7 @@
         </div>
     </div>
 
-    <!-- SISTEM UTAMA -->
+    
     <div id="mainSystem">
         <div class="header">
             <h1>SISTEM PERPUSTAKAAN SMA AL-AZIZ BANGIL</h1>
@@ -123,7 +123,7 @@
         <div class="container">
             <div class="loading" id="loading"><div class="spinner"></div><p>Memuat data...</p></div>
             
-            <!-- DASHBOARD -->
+           
             <div id="dashboard" class="page active">
                 <h2>Dashboard</h2>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 15px 0;">
@@ -143,7 +143,7 @@
                 <button class="btn btn-info" onclick="loadDashboard()">Refresh Data</button>
             </div>
             
-            <!-- DATA BUKU -->
+            
             <div id="buku" class="page">
                 <h2>Data Buku</h2>
                 <div id="alertBuku" class="alert"></div>
@@ -174,7 +174,7 @@
                 </div>
             </div>
             
-            <!-- DATA ANGGOTA -->
+           
             <div id="anggota" class="page">
                 <h2>Data Anggota</h2>
                 <div id="alertAnggota" class="alert"></div>
@@ -202,7 +202,7 @@
                 </div>
             </div>
             
-            <!-- PEMINJAMAN -->
+            
             <div id="peminjaman" class="page">
                 <h2>Transaksi Peminjaman</h2>
                 <div id="alertPinjam" class="alert"></div>
@@ -215,7 +215,7 @@
                 </div>
             </div>
             
-            <!-- SCANNER -->
+           
             <div id="scanner" class="page">
                 <h2>Scan Barcode (Scanner Fisik)</h2>
                 <div id="alertScan" class="alert"></div>
@@ -243,9 +243,6 @@
     </div>
 
     <script>
-        // ============================================
-        // LOGIN
-        // ============================================
         
         if(sessionStorage.getItem('loggedIn') === 'true') {
             document.getElementById('loginPage').style.display = 'none';
@@ -294,10 +291,8 @@
         document.getElementById('password').addEventListener('keydown', function(e) { if(e.key === 'Enter') login(); });
         document.getElementById('username').addEventListener('keydown', function(e) { if(e.key === 'Enter') document.getElementById('password').focus(); });
         
-        // ============================================
-        // KONFIGURASI
-        // ============================================
-        const API_URL = 'https://script.google.com/macros/s/AKfycbxSS-AMHDvUbtmlQb66Rb03z6Dk5GiSouY8_NyHsJ_TRIbz3KLNO5iRYy9EO92bpZ6Zhg/exec';
+
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyeTAORpy6fqW-l3PO37FZaiiGvfq9Ye59EPc9MtdgvemYYUaIzalNNkIf-3RX0ywQKFQ/exec';
         let cacheBuku = [], cacheAnggota = [], cacheTransaksi = [];
         let scanAnggota = null, scanBuku = null, scanTransaksi = null;
         
@@ -346,7 +341,7 @@
             hideLoading();
         }
         
-        // DATA BUKU
+
         async function loadBuku() {
             showLoading();
             try { const res = await callAPI('getBuku'); if(res.success) { cacheBuku = res.data; renderBuku(); } } catch(e) {}
@@ -387,7 +382,6 @@
         function batalBuku() { document.getElementById('formBuku').style.display = 'none'; }
         async function simpanBuku() { alert('Untuk menambah/mengedit buku, silakan buka Google Spreadsheet langsung.'); batalBuku(); }
         
-        // DATA ANGGOTA
         async function loadAnggota() {
             showLoading();
             try { const res = await callAPI('getAnggota'); if(res.success) { cacheAnggota = res.data; renderAnggota(); } } catch(e) {}
@@ -426,7 +420,6 @@
         function batalAnggota() { document.getElementById('formAnggota').style.display = 'none'; }
         async function simpanAnggota() { alert('Untuk menambah/mengedit anggota, silakan buka Google Spreadsheet langsung.'); batalAnggota(); }
         
-        // TRANSAKSI
         async function loadTransaksi() {
             showLoading();
             try { const res = await callAPI('getTransaksi'); if(res.success) { cacheTransaksi = res.data; renderTransaksi(); } } catch(e) {}
@@ -461,7 +454,6 @@
             } catch(e) { hideLoading(); }
         }
         
-        // SCANNER
         function initScanner() {
             document.getElementById('scanAnggota').disabled = false;
             document.getElementById('scanAnggota').focus();
@@ -570,7 +562,6 @@
             setTimeout(() => alert.style.display = 'none', 5000);
         }
         
-        // PRINT BARCODE
         function printBarcode(type) {
             const data = type === 'buku' ? cacheBuku : cacheAnggota;
             const label = type === 'buku' ? 'BUKU' : 'ANGGOTA';
@@ -585,7 +576,6 @@
     const clone = svg.cloneNode(true);
     clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
     
-    // Convert to canvas
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     const svgData = new XMLSerializer().serializeToString(clone);
@@ -598,7 +588,6 @@
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(img, 0, 0);
         
-        // Download
         const link = document.createElement('a');
         link.download = filename + '.png';
         link.href = canvas.toDataURL('image/png');
@@ -612,7 +601,6 @@
             showAlert('alertBuku', 'Barcode berhasil digenerate!', 'success');
         }
         
-        // INIT
         loadDashboard();
         setInterval(() => {
             if(document.getElementById('mainSystem').style.display === 'block') {
