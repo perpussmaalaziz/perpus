@@ -105,7 +105,7 @@
     <!-- SISTEM UTAMA -->
     <div id="mainSystem">
         <div class="header">
-            <h1>SISTEM PERPUSTAKAAN MA AL-AZIZ</h1>
+            <h1>SISTEM PERPUSTAKAAN SMA AL-AZIZ BANGIL</h1>
             <div>
                 <span id="clock" style="margin-right: 15px;"></span>
                 <button class="logout-btn" onclick="logout()">Logout</button>
@@ -246,8 +246,6 @@
         // ============================================
         // LOGIN
         // ============================================
-        const VALID_USERNAME = 'admin';
-        const VALID_PASSWORD = 'perpus2024';
         
         if(sessionStorage.getItem('loggedIn') === 'true') {
             document.getElementById('loginPage').style.display = 'none';
@@ -257,30 +255,41 @@
             setInterval(updateClock, 1000);
         }
         
-        function login() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            if(username === VALID_USERNAME && password === VALID_PASSWORD) {
-                sessionStorage.setItem('loggedIn', 'true');
-                document.getElementById('loginPage').style.display = 'none';
-                document.getElementById('mainSystem').style.display = 'block';
-                document.getElementById('loginError').style.display = 'none';
-                loadDashboard();
-                updateClock();
-                setInterval(updateClock, 1000);
-            } else {
-                document.getElementById('loginError').style.display = 'block';
-                document.getElementById('password').value = '';
-                document.getElementById('password').focus();
-            }
-        }
+        async function login() {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    
+    if(!username || !password) {
+        document.getElementById('loginError').style.display = 'block';
+        document.getElementById('loginError').textContent = 'Username dan password wajib diisi!';
+        return;
+    }
+    
+    showLoading();
+    try {
+        const res = await callAPI('login', { username, password });
+        hideLoading();
         
-        function logout() {
-            if(confirm('Yakin ingin logout?')) {
-                sessionStorage.removeItem('loggedIn');
-                location.reload();
-            }
+        if(res.success) {
+            sessionStorage.setItem('loggedIn', 'true');
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('mainSystem').style.display = 'block';
+            document.getElementById('loginError').style.display = 'none';
+            loadDashboard();
+            updateClock();
+            setInterval(updateClock, 1000);
+        } else {
+            document.getElementById('loginError').style.display = 'block';
+            document.getElementById('loginError').textContent = res.message;
+            document.getElementById('password').value = '';
+            document.getElementById('password').focus();
         }
+    } catch(e) {
+        hideLoading();
+        document.getElementById('loginError').style.display = 'block';
+        document.getElementById('loginError').textContent = 'Gagal menghubungkan ke server!';
+    }
+}
         
         document.getElementById('password').addEventListener('keydown', function(e) { if(e.key === 'Enter') login(); });
         document.getElementById('username').addEventListener('keydown', function(e) { if(e.key === 'Enter') document.getElementById('password').focus(); });
