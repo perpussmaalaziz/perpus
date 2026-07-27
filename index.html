@@ -25,7 +25,7 @@
         .header .logout-btn { background: #dc3545; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
         .nav { display: flex; gap: 10px; background: white; padding: 10px 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); flex-wrap: wrap; }
         .nav button { padding: 10px 20px; border: none; background: #008f58; color: white; cursor: pointer; border-radius: 5px; font-size: 14px; }
-        .nav button.active { background: #008f58; color: white; }
+        .nav button.active { background: #005f4b; color: white; }
         .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
         .page { display: none; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .page.active { display: block; }
@@ -58,6 +58,11 @@
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
         .keranjang { background: #fff; border: 2px solid #1a73e8; border-radius: 10px; padding: 15px; margin: 10px 0; min-height: 50px; }
         .keranjang-item { background: #e8f0fe; padding: 8px 12px; border-radius: 5px; margin: 5px 0; display: flex; justify-content: space-between; align-items: center; }
+        .pagination { display:flex; justify-content:center; align-items:center; gap:5px; margin:15px 0; flex-wrap:wrap; }
+        .pagination button { padding:6px 10px; border:none; border-radius:4px; cursor:pointer; font-size:12px; background:#e8f0fe; color:#1a73e8; }
+        .pagination button.active { background:#1a73e8; color:white; }
+        .pagination button:disabled { opacity:0.4; cursor:not-allowed; }
+        .pagination span { font-size:12px; color:#666; }
     </style>
 </head>
 <body>
@@ -75,33 +80,23 @@
 <div class="container"><div class="loading" id="loading"><div class="spinner"></div><p>Memuat data...</p></div>
 
 <!-- DASHBOARD -->
-<div id="dashboard" class="page active">
-    <h2>Dashboard</h2>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;margin:15px 0;">
-        <div style="background:#e8f0fe;padding:20px;border-radius:10px;text-align:center;"><h3>Total Buku</h3><p style="font-size:32px;font-weight:bold;" id="totalBuku">-</p></div>
-        <div style="background:#d4edda;padding:20px;border-radius:10px;text-align:center;"><h3>Total Anggota</h3><p style="font-size:32px;font-weight:bold;" id="totalAnggota">-</p></div>
-        <div style="background:#fff3cd;padding:20px;border-radius:10px;text-align:center;"><h3>Sedang Dipinjam</h3><p style="font-size:32px;font-weight:bold;" id="totalDipinjam">-</p></div>
-        <div style="background:#f8d7da;padding:20px;border-radius:10px;text-align:center;"><h3>Terlambat</h3><p style="font-size:32px;font-weight:bold;" id="totalTerlambat">-</p></div>
-    </div>
-    
-    <!-- GRAFIK -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;margin:15px 0;">
-        <div style="background:white;padding:15px;border-radius:10px;box-shadow:0 2px 4px rgba(0,0,0,0.1);">
-            <h3 style="margin-bottom:10px;">Peminjaman per Bulan</h3>
-            <canvas id="chartBulanan" height="200"></canvas>
-        </div>
-        <div style="background:white;padding:15px;border-radius:10px;box-shadow:0 2px 4px rgba(0,0,0,0.1);">
-            <h3 style="margin-bottom:10px;">Buku Terpopuler</h3>
-            <canvas id="chartBuku" height="200"></canvas>
-        </div>
-    </div>
-    
-    <button class="btn btn-info" onclick="loadDashboard()">Refresh</button>
-</div>
+<div id="dashboard" class="page active"><h2>Dashboard</h2>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;margin:15px 0;">
+<div style="background:#e8f0fe;padding:20px;border-radius:10px;text-align:center;"><h3>Total Buku</h3><p style="font-size:32px;font-weight:bold;" id="totalBuku">-</p></div>
+<div style="background:#d4edda;padding:20px;border-radius:10px;text-align:center;"><h3>Total Anggota</h3><p style="font-size:32px;font-weight:bold;" id="totalAnggota">-</p></div>
+<div style="background:#fff3cd;padding:20px;border-radius:10px;text-align:center;"><h3>Sedang Dipinjam</h3><p style="font-size:32px;font-weight:bold;" id="totalDipinjam">-</p></div>
+<div style="background:#f8d7da;padding:20px;border-radius:10px;text-align:center;"><h3>Terlambat</h3><p style="font-size:32px;font-weight:bold;" id="totalTerlambat">-</p></div></div>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:15px;margin:15px 0;">
+<div style="background:white;padding:15px;border-radius:10px;box-shadow:0 2px 4px rgba(0,0,0,0.1);"><h3 style="margin-bottom:10px;">Peminjaman per Bulan</h3><canvas id="chartBulanan" height="200"></canvas></div>
+<div style="background:white;padding:15px;border-radius:10px;box-shadow:0 2px 4px rgba(0,0,0,0.1);"><h3 style="margin-bottom:10px;">Buku Terpopuler</h3><canvas id="chartBuku" height="200"></canvas></div>
+<div style="background:white;padding:15px;border-radius:10px;box-shadow:0 2px 4px rgba(0,0,0,0.1);"><h3 style="margin-bottom:10px;">Anggota Teraktif</h3><canvas id="chartAnggota" height="200"></canvas></div></div>
+<button class="btn btn-info" onclick="loadDashboard()">Refresh</button></div>
 
-<!-- DATA BUKU --><div id="buku" class="page"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;"><h2>Data Buku</h2><input type="text" id="searchBuku" placeholder="Cari..." style="width:250px;padding:8px 12px;border:2px solid #1a73e8;border-radius:8px;font-size:14px;" oninput="filterBuku()"></div><div id="alertBuku" class="alert"></div><div class="btn-group"><button class="btn btn-primary" onclick="showFormBuku()">+ Tambah Buku</button><button class="btn btn-success" onclick="printBarcode('buku')">Print Barcode</button><button class="btn btn-info" onclick="loadBuku()">Refresh</button></div><div id="formBuku" style="display:none;" class="card"><input type="hidden" id="editBukuId"><div class="form-group"><label>ID Buku</label><input type="text" id="idBuku" placeholder="B001"></div><div class="form-group"><label>Judul</label><input type="text" id="judulBuku"></div><div class="form-group"><label>Pengarang</label><input type="text" id="pengarangBuku"></div><div class="form-group"><label>Penerbit</label><input type="text" id="penerbitBuku"></div><div class="form-group"><label>Tahun</label><input type="number" id="tahunBuku"></div><div class="form-group"><label>Stok</label><input type="number" id="stokBuku" value="1"></div><div class="btn-group"><button class="btn btn-success" onclick="simpanBuku()">Simpan</button><button class="btn btn-danger" onclick="batalBuku()">Batal</button></div></div><div style="overflow-x:auto;"><table><thead><tr><th>Barcode</th><th>ID</th><th>Judul</th><th>Pengarang</th><th>Penerbit</th><th>Tahun</th><th>Stok</th><th>Aksi</th></tr></thead><tbody id="tabelBuku"></tbody></table></div></div>
+<!-- DATA BUKU -->
+<div id="buku" class="page"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;"><h2>Data Buku</h2><input type="text" id="searchBuku" placeholder="Cari..." style="width:250px;padding:8px 12px;border:2px solid #1a73e8;border-radius:8px;font-size:14px;" oninput="filterBuku()"></div><div id="alertBuku" class="alert"></div><div class="btn-group"><button class="btn btn-primary" onclick="showFormBuku()">+ Tambah Buku</button><button class="btn btn-success" onclick="printBarcode('buku')">Print Barcode</button><button class="btn btn-info" onclick="loadBuku()">Refresh</button></div><div id="formBuku" style="display:none;" class="card"><input type="hidden" id="editBukuId"><div class="form-group"><label>ID Buku</label><input type="text" id="idBuku" placeholder="B001"></div><div class="form-group"><label>Judul</label><input type="text" id="judulBuku"></div><div class="form-group"><label>Pengarang</label><input type="text" id="pengarangBuku"></div><div class="form-group"><label>Penerbit</label><input type="text" id="penerbitBuku"></div><div class="form-group"><label>Tahun</label><input type="number" id="tahunBuku"></div><div class="form-group"><label>Stok</label><input type="number" id="stokBuku" value="1"></div><div class="btn-group"><button class="btn btn-success" onclick="simpanBuku()">Simpan</button><button class="btn btn-danger" onclick="batalBuku()">Batal</button></div></div><div style="overflow-x:auto;"><table><thead><tr><th>Barcode</th><th>ID</th><th>Judul</th><th>Pengarang</th><th>Penerbit</th><th>Tahun</th><th>Stok</th><th>Aksi</th></tr></thead><tbody id="tabelBuku"></tbody></table></div><div class="pagination" id="paginationBuku"></div></div>
 
-<!-- DATA ANGGOTA --><div id="anggota" class="page"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;"><h2>Data Anggota</h2><input type="text" id="searchAnggota" placeholder="Cari..." style="width:250px;padding:8px 12px;border:2px solid #1a73e8;border-radius:8px;font-size:14px;" oninput="filterAnggota()"></div><div id="alertAnggota" class="alert"></div><div class="btn-group"><button class="btn btn-primary" onclick="showFormAnggota()">+ Tambah Anggota</button><button class="btn btn-success" onclick="printBarcode('anggota')">Print Barcode</button><button class="btn btn-info" onclick="loadAnggota()">Refresh</button></div><div id="formAnggota" style="display:none;" class="card"><input type="hidden" id="editAnggotaId"><div class="form-group"><label>ID Anggota</label><input type="text" id="idAnggota" placeholder="A001"></div><div class="form-group"><label>Nama Lengkap</label><input type="text" id="namaAnggota"></div><div class="form-group"><label>Kelas/Jurusan</label><input type="text" id="kelasAnggota"></div><div class="form-group"><label>No Telepon</label><input type="text" id="telpAnggota"></div><div class="btn-group"><button class="btn btn-success" onclick="simpanAnggota()">Simpan</button><button class="btn btn-danger" onclick="batalAnggota()">Batal</button></div></div><div style="overflow-x:auto;"><table><thead><tr><th>Barcode</th><th>ID</th><th>Nama</th><th>Kelas</th><th>No Telp</th><th>Aksi</th></tr></thead><tbody id="tabelAnggota"></tbody></table></div></div>
+<!-- DATA ANGGOTA -->
+<div id="anggota" class="page"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;"><h2>Data Anggota</h2><input type="text" id="searchAnggota" placeholder="Cari..." style="width:250px;padding:8px 12px;border:2px solid #1a73e8;border-radius:8px;font-size:14px;" oninput="filterAnggota()"></div><div id="alertAnggota" class="alert"></div><div class="btn-group"><button class="btn btn-primary" onclick="showFormAnggota()">+ Tambah Anggota</button><button class="btn btn-success" onclick="printBarcode('anggota')">Print Barcode</button><button class="btn btn-info" onclick="loadAnggota()">Refresh</button></div><div id="formAnggota" style="display:none;" class="card"><input type="hidden" id="editAnggotaId"><div class="form-group"><label>ID Anggota</label><input type="text" id="idAnggota" placeholder="A001"></div><div class="form-group"><label>Nama Lengkap</label><input type="text" id="namaAnggota"></div><div class="form-group"><label>Kelas/Jurusan</label><input type="text" id="kelasAnggota"></div><div class="form-group"><label>No Telepon</label><input type="text" id="telpAnggota"></div><div class="btn-group"><button class="btn btn-success" onclick="simpanAnggota()">Simpan</button><button class="btn btn-danger" onclick="batalAnggota()">Batal</button></div></div><div style="overflow-x:auto;"><table><thead><tr><th>Barcode</th><th>ID</th><th>Nama</th><th>Kelas</th><th>No Telp</th><th>Aksi</th></tr></thead><tbody id="tabelAnggota"></tbody></table></div><div class="pagination" id="paginationAnggota"></div></div>
 
 <!-- PEMINJAMAN --><div id="peminjaman" class="page"><h2>Peminjaman Buku</h2><div id="alertPeminjaman" class="alert"></div><div class="card"><div class="scanner-ready"><p class="blink">SIAP SCAN</p></div><div style="display:flex;gap:15px;flex-wrap:wrap;"><div style="flex:1;min-width:250px;"><div class="form-group"><label>Scan ID Anggota</label><input type="text" id="pinjamAnggota" placeholder="Scan kartu anggota..." autofocus></div><div id="infoPinjamAnggota" style="display:none;background:#e8f0fe;padding:10px;border-radius:5px;margin:10px 0;"></div><div class="form-group"><label>Tanggal Kembali</label><input type="date" id="tglKembaliPinjam"></div></div><div style="flex:1;min-width:250px;"><div class="form-group"><label>Scan ID Buku</label><input type="text" id="pinjamBuku" placeholder="Scan barcode buku..." disabled></div><div class="keranjang" id="keranjangBuku"><p style="color:#999;">Belum ada buku di-scan</p></div></div></div><div class="btn-group"><button class="btn btn-success" id="btnProsesPinjam" disabled onclick="prosesPinjamMulti()">Proses Peminjaman</button><button class="btn btn-danger" onclick="resetPinjam()">Reset</button></div></div></div>
 
@@ -120,6 +115,7 @@ document.getElementById('username').addEventListener('keydown',function(e){if(e.
 const API_URL='https://script.google.com/macros/s/AKfycbxrFRRN8kBbAF5vECSFPQL6ZrA4LWgKUogmlrV5DhkwizS93K0hIeyLzHLPrBmJTxJQgg/exec';
 let cacheBuku=[],cacheAnggota=[],cacheTransaksi=[];
 let pinjamAnggota=null,pinjamBukuList=[],kembaliAnggota=null,kembaliBuku=null;
+let pageBuku=1,pageAnggota=1,perPage=25;
 
 async function callAPI(action,data={}){data.action=action;const r=await fetch(API_URL,{method:'POST',body:JSON.stringify(data)});return await r.json();}
 function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));document.getElementById(id).classList.add('active');const nb=document.getElementById('nav-'+id);if(nb)nb.classList.add('active');if(id==='dashboard')loadDashboard();if(id==='buku')loadBuku();if(id==='anggota')loadAnggota();if(id==='peminjaman')initPeminjaman();if(id==='pengembalian')initPengembalian();if(id==='history')loadHistory();}
@@ -127,34 +123,23 @@ function updateClock(){const c=document.getElementById('clock');if(c)c.textConte
 function showLoading(){document.getElementById('loading').style.display='block';}
 function hideLoading(){document.getElementById('loading').style.display='none';}
 
-async function loadDashboard(){
-    showLoading();
-    try{
-        const[br,ar,tr]=await Promise.all([callAPI('getBuku'),callAPI('getAnggota'),callAPI('getTransaksi')]);
-        if(br.success)cacheBuku=br.data;
-        if(ar.success)cacheAnggota=ar.data;
-        if(tr.success)cacheTransaksi=tr.data;
-        
-        document.getElementById('totalBuku').textContent=cacheBuku.length;
-        document.getElementById('totalAnggota').textContent=cacheAnggota.length;
-        document.getElementById('totalDipinjam').textContent=cacheTransaksi.filter(t=>t['STATUS']==='Dipinjam'||t['STATUS']==='⚠️ Terlambat').length;
-        document.getElementById('totalTerlambat').textContent=cacheTransaksi.filter(t=>t['STATUS']==='⚠️ Terlambat').length;
-        
-        renderChartBulanan();
-        renderChartBukuPopuler();
-    }catch(e){}
-    hideLoading();
-}
+async function loadDashboard(){showLoading();try{const[br,ar,tr]=await Promise.all([callAPI('getBuku'),callAPI('getAnggota'),callAPI('getTransaksi')]);if(br.success)cacheBuku=br.data;if(ar.success)cacheAnggota=ar.data;if(tr.success)cacheTransaksi=tr.data;document.getElementById('totalBuku').textContent=cacheBuku.length;document.getElementById('totalAnggota').textContent=cacheAnggota.length;document.getElementById('totalDipinjam').textContent=cacheTransaksi.filter(t=>t['STATUS']==='Dipinjam'||t['STATUS']==='⚠️ Terlambat').length;document.getElementById('totalTerlambat').textContent=cacheTransaksi.filter(t=>t['STATUS']==='⚠️ Terlambat').length;renderChartBulanan();renderChartBukuPopuler();renderChartAnggotaAktif();}catch(e){}hideLoading();}
 
-async function loadBuku(){showLoading();try{const r=await callAPI('getBuku');if(r.success){cacheBuku=r.data;renderBuku();}}catch(e){}hideLoading();}
-function renderBuku(){document.getElementById('tabelBuku').innerHTML=cacheBuku.map((b,i)=>{const id=b['ID BUKU']||b.id||'';return`<tr><td><div style="display:flex;align-items:center;gap:8px;"><svg id="bc-buku-${i}"></svg><button class="btn btn-success" style="font-size:10px;" onclick="downloadBarcode('bc-buku-${i}','${id}')">Download</button></div></td><td>${id}</td><td>${b['JUDUL BUKU']||''}</td><td>${b['PENGARANG']||''}</td><td>${b['PENERBIT']||''}</td><td>${b['TAHUN']||''}</td><td><strong>${b['STOK']||0}</strong></td><td><button class="btn btn-warning" style="font-size:10px;" onclick="editBuku('${id}')">Edit</button></td></tr>`;}).join('');setTimeout(()=>cacheBuku.forEach((b,i)=>{try{const s=document.getElementById(`bc-buku-${i}`);if(s)JsBarcode(s,b['ID BUKU']||b.id||'',{format:"CODE128",width:2,height:50,displayValue:true,fontSize:12,margin:8});}catch(e){}}),200);}
+// BUKU DENGAN PAGINATION
+async function loadBuku(){showLoading();try{const r=await callAPI('getBuku');if(r.success){cacheBuku=r.data;pageBuku=1;renderBuku(cacheBuku);}}catch(e){}hideLoading();}
+function renderBuku(data){const d=data||cacheBuku;const start=(pageBuku-1)*perPage;const end=start+perPage;const pageData=d.slice(start,end);document.getElementById('tabelBuku').innerHTML=pageData.map((b,i)=>{const id=b['ID BUKU']||b.id||'';return`<tr><td><div style="display:flex;align-items:center;gap:8px;"><svg id="bc-buku-${i}"></svg><button class="btn btn-success" style="font-size:10px;" onclick="downloadBarcode('bc-buku-${i}','${id}')">Download</button></div></td><td>${id}</td><td>${b['JUDUL BUKU']||''}</td><td>${b['PENGARANG']||''}</td><td>${b['PENERBIT']||''}</td><td>${b['TAHUN']||''}</td><td><strong>${b['STOK']||0}</strong></td><td><button class="btn btn-warning" style="font-size:10px;" onclick="editBuku('${id}')">Edit</button></td></tr>`;}).join('');setTimeout(()=>pageData.forEach((b,i)=>{try{const s=document.getElementById(`bc-buku-${i}`);if(s)JsBarcode(s,b['ID BUKU']||b.id||'',{format:"CODE128",width:1.5,height:35,displayValue:true,fontSize:10,margin:5});}catch(e){}}),100);renderPaginationBuku(d.length);}
+function renderPaginationBuku(total){const tp=Math.ceil(total/perPage);const c=document.getElementById('paginationBuku');if(!c)return;let h=`<button onclick="pageBuku=1;renderBuku();" ${pageBuku===1?'disabled':''}>&#171;</button><button onclick="pageBuku=${pageBuku-1};renderBuku();" ${pageBuku===1?'disabled':''}>&#8249;</button>`;for(let i=Math.max(1,pageBuku-2);i<=Math.min(tp,pageBuku+2);i++){h+=`<button class="${i===pageBuku?'active':''}" onclick="pageBuku=${i};renderBuku();">${i}</button>`;}h+=`<button onclick="pageBuku=${pageBuku+1};renderBuku();" ${pageBuku===tp?'disabled':''}>&#8250;</button><button onclick="pageBuku=${tp};renderBuku();" ${pageBuku===tp?'disabled':''}>&#187;</button><span>${pageBuku}/${tp} (${total})</span>`;c.innerHTML=h;}
+function filterBuku(){const kw=document.getElementById('searchBuku').value.toLowerCase();const f=cacheBuku.filter(b=>(b['ID BUKU']||'').toLowerCase().includes(kw)||(b['JUDUL BUKU']||'').toLowerCase().includes(kw)||(b['PENGARANG']||'').toLowerCase().includes(kw)||(b['PENERBIT']||'').toLowerCase().includes(kw));pageBuku=1;renderBuku(f);}
 function showFormBuku(){document.getElementById('formBuku').style.display='block';document.getElementById('editBukuId').value='';document.getElementById('idBuku').value='';document.getElementById('idBuku').disabled=false;document.getElementById('judulBuku').value='';document.getElementById('pengarangBuku').value='';document.getElementById('penerbitBuku').value='';document.getElementById('tahunBuku').value='';document.getElementById('stokBuku').value='1';}
 function editBuku(id){const b=cacheBuku.find(x=>(x['ID BUKU']||x.id)===id);if(!b)return;document.getElementById('formBuku').style.display='block';document.getElementById('editBukuId').value=id;document.getElementById('idBuku').value=id;document.getElementById('idBuku').disabled=true;document.getElementById('judulBuku').value=b['JUDUL BUKU']||'';document.getElementById('pengarangBuku').value=b['PENGARANG']||'';document.getElementById('penerbitBuku').value=b['PENERBIT']||'';document.getElementById('tahunBuku').value=b['TAHUN']||'';document.getElementById('stokBuku').value=b['STOK']||1;document.getElementById('formBuku').scrollIntoView({behavior:'smooth'});}
 async function simpanBuku(){const id=document.getElementById('idBuku').value,judul=document.getElementById('judulBuku').value;if(!id||!judul){showAlert('alertBuku','ID dan Judul wajib diisi!','error');return;}showLoading();try{const eid=document.getElementById('editBukuId').value;const d={idBuku:id,judul,pengarang:document.getElementById('pengarangBuku').value,penerbit:document.getElementById('penerbitBuku').value,tahun:document.getElementById('tahunBuku').value,stok:parseInt(document.getElementById('stokBuku').value)};const r=await callAPI(eid?'editBuku':'tambahBuku',d);hideLoading();if(r.success){showAlert('alertBuku',r.message,'success');batalBuku();loadBuku();loadDashboard();}else{showAlert('alertBuku',r.message,'error');}}catch(e){hideLoading();showAlert('alertBuku','Gagal!','error');}}
 function batalBuku(){document.getElementById('formBuku').style.display='none';}
 
-async function loadAnggota(){showLoading();try{const r=await callAPI('getAnggota');if(r.success){cacheAnggota=r.data;renderAnggota();}}catch(e){}hideLoading();}
-function renderAnggota(){document.getElementById('tabelAnggota').innerHTML=cacheAnggota.map((a,i)=>{const id=a['ID ANGGOTA']||a.id||'';return`<tr><td><div style="display:flex;align-items:center;gap:8px;"><svg id="bc-anggota-${i}"></svg><button class="btn btn-success" style="font-size:10px;" onclick="downloadBarcode('bc-anggota-${i}','${id}')">Download</button></div></td><td>${id}</td><td>${a['NAMA LENGKAP']||''}</td><td>${a['KELAS/JURUSAN']||''}</td><td>${a['NO TELEPON']||''}</td><td><button class="btn btn-warning" style="font-size:10px;" onclick="editAnggota('${id}')">Edit</button></td></tr>`;}).join('');setTimeout(()=>cacheAnggota.forEach((a,i)=>{try{const s=document.getElementById(`bc-anggota-${i}`);if(s)JsBarcode(s,a['ID ANGGOTA']||a.id||'',{format:"CODE128",width:2,height:50,displayValue:true,fontSize:12,margin:8});}catch(e){}}),200);}
+// ANGGOTA DENGAN PAGINATION
+async function loadAnggota(){showLoading();try{const r=await callAPI('getAnggota');if(r.success){cacheAnggota=r.data;pageAnggota=1;renderAnggota(cacheAnggota);}}catch(e){}hideLoading();}
+function renderAnggota(data){const d=data||cacheAnggota;const start=(pageAnggota-1)*perPage;const end=start+perPage;const pageData=d.slice(start,end);document.getElementById('tabelAnggota').innerHTML=pageData.map((a,i)=>{const id=a['ID ANGGOTA']||a.id||'';return`<tr><td><div style="display:flex;align-items:center;gap:8px;"><svg id="bc-anggota-${i}"></svg><button class="btn btn-success" style="font-size:10px;" onclick="downloadBarcode('bc-anggota-${i}','${id}')">Download</button></div></td><td>${id}</td><td>${a['NAMA LENGKAP']||''}</td><td>${a['KELAS/JURUSAN']||''}</td><td>${a['NO TELEPON']||''}</td><td><button class="btn btn-warning" style="font-size:10px;" onclick="editAnggota('${id}')">Edit</button></td></tr>`;}).join('');setTimeout(()=>pageData.forEach((a,i)=>{try{const s=document.getElementById(`bc-anggota-${i}`);if(s)JsBarcode(s,a['ID ANGGOTA']||a.id||'',{format:"CODE128",width:1.5,height:35,displayValue:true,fontSize:10,margin:5});}catch(e){}}),100);renderPaginationAnggota(d.length);}
+function renderPaginationAnggota(total){const tp=Math.ceil(total/perPage);const c=document.getElementById('paginationAnggota');if(!c)return;let h=`<button onclick="pageAnggota=1;renderAnggota();" ${pageAnggota===1?'disabled':''}>&#171;</button><button onclick="pageAnggota=${pageAnggota-1};renderAnggota();" ${pageAnggota===1?'disabled':''}>&#8249;</button>`;for(let i=Math.max(1,pageAnggota-2);i<=Math.min(tp,pageAnggota+2);i++){h+=`<button class="${i===pageAnggota?'active':''}" onclick="pageAnggota=${i};renderAnggota();">${i}</button>`;}h+=`<button onclick="pageAnggota=${pageAnggota+1};renderAnggota();" ${pageAnggota===tp?'disabled':''}>&#8250;</button><button onclick="pageAnggota=${tp};renderAnggota();" ${pageAnggota===tp?'disabled':''}>&#187;</button><span>${pageAnggota}/${tp} (${total})</span>`;c.innerHTML=h;}
+function filterAnggota(){const kw=document.getElementById('searchAnggota').value.toLowerCase();const f=cacheAnggota.filter(a=>(a['ID ANGGOTA']||'').toLowerCase().includes(kw)||(a['NAMA LENGKAP']||'').toLowerCase().includes(kw)||(a['KELAS/JURUSAN']||'').toLowerCase().includes(kw));pageAnggota=1;renderAnggota(f);}
 function showFormAnggota(){document.getElementById('formAnggota').style.display='block';document.getElementById('editAnggotaId').value='';document.getElementById('idAnggota').value='';document.getElementById('idAnggota').disabled=false;document.getElementById('namaAnggota').value='';document.getElementById('kelasAnggota').value='';document.getElementById('telpAnggota').value='';}
 function editAnggota(id){const a=cacheAnggota.find(x=>(x['ID ANGGOTA']||x.id)===id);if(!a)return;document.getElementById('formAnggota').style.display='block';document.getElementById('editAnggotaId').value=id;document.getElementById('idAnggota').value=id;document.getElementById('idAnggota').disabled=true;document.getElementById('namaAnggota').value=a['NAMA LENGKAP']||'';document.getElementById('kelasAnggota').value=a['KELAS/JURUSAN']||'';document.getElementById('telpAnggota').value=a['NO TELEPON']||'';document.getElementById('formAnggota').scrollIntoView({behavior:'smooth'});}
 async function simpanAnggota(){const id=document.getElementById('idAnggota').value,nama=document.getElementById('namaAnggota').value;if(!id||!nama){showAlert('alertAnggota','ID dan Nama wajib diisi!','error');return;}showLoading();try{const eid=document.getElementById('editAnggotaId').value;const d={idAnggota:id,nama,kelas:document.getElementById('kelasAnggota').value,telp:document.getElementById('telpAnggota').value};const r=await callAPI(eid?'editAnggota':'tambahAnggota',d);hideLoading();if(r.success){showAlert('alertAnggota',r.message,'success');batalAnggota();loadAnggota();loadDashboard();}else{showAlert('alertAnggota',r.message,'error');}}catch(e){hideLoading();showAlert('alertAnggota','Gagal!','error');}}
@@ -181,102 +166,25 @@ async function loadHistory(){showLoading();try{const r=await callAPI('getTransak
 function renderHistory(){document.getElementById('tabelHistory').innerHTML=cacheTransaksi.map(t=>{let sc=t['STATUS']==='Dikembalikan'?'badge-kembali':(t['STATUS']==='⚠️ Terlambat'?'badge-terlambat':'badge-pinjam');return`<tr><td><strong>${t['ID PINJAM']||''}</strong></td><td>${formatTanggalJam(t['TANGGAL PINJAM'])}</td><td>${t['NAMA ANGGOTA']||''}</td><td>${t['JUDUL BUKU']||''}</td><td>${formatTanggal(t['TANGGAL KEMBALI'])}</td><td>${t['TANGGAL DIKEMBALIKAN']?formatTanggalJam(t['TANGGAL DIKEMBALIKAN']):'-'}</td><td><span class="badge ${sc}">${t['STATUS']||''}</span></td><td><button class="btn btn-danger" style="font-size:10px;" onclick="hapusHistory('${t['ID PINJAM']}')">Hapus</button></td></tr>`;}).join('');}
 async function hapusHistory(id){if(!confirm('Yakin hapus transaksi '+id+'?\nStok akan dikembalikan otomatis.'))return;showLoading();try{const r=await callAPI('hapusTransaksi',{idPinjam:id});hideLoading();if(r.success){showAlert('alertHistory',r.message,'success');loadHistory();loadDashboard();}else{showAlert('alertHistory',r.message,'error');}}catch(e){hideLoading();}}
 
-// UTILITY
 // GRAFIK
-let chartBulanan, chartBuku;
+let chartBulanan,chartBuku,chartAnggota;
+function renderChartBulanan(){const ctx=document.getElementById('chartBulanan');if(!ctx)return;const months=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];const now=new Date();const labels=[],data=[];for(let i=5;i>=0;i--){const d=new Date(now.getFullYear(),now.getMonth()-i,1);labels.push(months[d.getMonth()]+' '+String(d.getFullYear()).slice(2));const count=cacheTransaksi.filter(t=>{if(!t['TANGGAL PINJAM'])return false;const td=new Date(t['TANGGAL PINJAM']);return td.getMonth()===d.getMonth()&&td.getFullYear()===d.getFullYear();}).length;data.push(count);}if(chartBulanan)chartBulanan.destroy();chartBulanan=new Chart(ctx,{type:'bar',data:{labels:labels,datasets:[{label:'Peminjaman',data:data,backgroundColor:'#1a73e8',borderRadius:5}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{stepSize:1}}}}});}
+function renderChartBukuPopuler(){const ctx=document.getElementById('chartBuku');if(!ctx)return;const count={};cacheTransaksi.forEach(t=>{const judul=t['JUDUL BUKU']||'Unknown';count[judul]=(count[judul]||0)+1;});const sorted=Object.entries(count).sort((a,b)=>b[1]-a[1]).slice(0,5);const labels=sorted.map(s=>s[0].length>20?s[0].slice(0,20)+'...':s[0]);const data=sorted.map(s=>s[1]);if(chartBuku)chartBuku.destroy();chartBuku=new Chart(ctx,{type:'bar',data:{labels:labels,datasets:[{label:'Dipinjam',data:data,backgroundColor:['#1a73e8','#28a745','#ffc107','#dc3545','#17a2b8'],borderRadius:5}]},options:{indexAxis:'y',responsive:true,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,ticks:{stepSize:1}}}}});}
+function renderChartAnggotaAktif(){const ctx=document.getElementById('chartAnggota');if(!ctx)return;const count={};cacheTransaksi.forEach(t=>{const nama=t['NAMA ANGGOTA']||'Unknown';count[nama]=(count[nama]||0)+1;});const sorted=Object.entries(count).sort((a,b)=>b[1]-a[1]).slice(0,5);const labels=sorted.map(s=>s[0].length>15?s[0].slice(0,15)+'...':s[0]);const data=sorted.map(s=>s[1]);if(chartAnggota)chartAnggota.destroy();chartAnggota=new Chart(ctx,{type:'bar',data:{labels:labels,datasets:[{label:'Pinjaman',data:data,backgroundColor:['#1a73e8','#28a745','#ffc107','#dc3545','#17a2b8'],borderRadius:5}]},options:{indexAxis:'y',responsive:true,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,ticks:{stepSize:1}}}}});}
 
-function renderChartBulanan(){
-    const ctx = document.getElementById('chartBulanan');
-    if(!ctx) return;
-    
-    // Hitung per bulan (6 bulan terakhir)
-    const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
-    const now = new Date();
-    const labels = [];
-    const data = [];
-    
-    for(let i=5; i>=0; i--){
-        const d = new Date(now.getFullYear(), now.getMonth()-i, 1);
-        labels.push(months[d.getMonth()]+' '+String(d.getFullYear()).slice(2));
-        const count = cacheTransaksi.filter(t=>{
-            if(!t['TANGGAL PINJAM']) return false;
-            const td = new Date(t['TANGGAL PINJAM']);
-            return td.getMonth()===d.getMonth() && td.getFullYear()===d.getFullYear();
-        }).length;
-        data.push(count);
-    }
-    
-    if(chartBulanan) chartBulanan.destroy();
-    chartBulanan = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Peminjaman',
-                data: data,
-                backgroundColor: '#1a73e8',
-                borderRadius: 5
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: { legend: { display: false } },
-            scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
-        }
-    });
-}
-
-function renderChartBukuPopuler(){
-    const ctx = document.getElementById('chartBuku');
-    if(!ctx) return;
-    
-    // Hitung buku paling sering dipinjam
-    const count = {};
-    cacheTransaksi.forEach(t=>{
-        const judul = t['JUDUL BUKU']||'Unknown';
-        count[judul] = (count[judul]||0)+1;
-    });
-    
-    const sorted = Object.entries(count).sort((a,b)=>b[1]-a[1]).slice(0,5);
-    const labels = sorted.map(s=>s[0].length>20?s[0].slice(0,20)+'...':s[0]);
-    const data = sorted.map(s=>s[1]);
-    
-    if(chartBuku) chartBuku.destroy();
-    chartBuku = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Dipinjam',
-                data: data,
-                backgroundColor: ['#1a73e8','#28a745','#ffc107','#dc3545','#17a2b8'],
-                borderRadius: 5
-            }]
-        },
-        options: {
-            indexAxis: 'y',
-            responsive: true,
-            plugins: { legend: { display: false } },
-            scales: { x: { beginAtZero: true, ticks: { stepSize: 1 } } }
-        }
-    });
-}
+// UTILITY
 function formatTanggalJam(d){if(!d)return'-';const dt=new Date(d);return`${String(dt.getDate()).padStart(2,'0')}/${String(dt.getMonth()+1).padStart(2,'0')}/${String(dt.getFullYear()).slice(2)} ${String(dt.getHours()).padStart(2,'0')}:${String(dt.getMinutes()).padStart(2,'0')} WIB`;}
 function formatTanggal(d){if(!d)return'-';const dt=new Date(d);return`${String(dt.getDate()).padStart(2,'0')}/${String(dt.getMonth()+1).padStart(2,'0')}/${String(dt.getFullYear()).slice(2)}`;}
 function showAlert(id,msg,type){const el=document.getElementById(id);if(!el)return;el.textContent=msg;el.className='alert alert-'+type;el.style.display='block';setTimeout(()=>el.style.display='none',5000);}
 function printBarcode(type){const data=type==='buku'?cacheBuku:cacheAnggota;let w=window.open('','_blank','width=800,height=600');w.document.write('<!DOCTYPE html><html><head><script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"><\/script><style>@page{size:A4;margin:10mm}body{font-family:Arial;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;padding:10px}.card{border:1px solid #ccc;padding:10px;text-align:center;width:200px}@media print{.no-print{display:none}}</style></head><body><button class="no-print" onclick="window.print()" style="position:fixed;top:10px;right:10px;z-index:999;padding:10px 20px;">PRINT</button><div id="c"></div><script>var d='+JSON.stringify(data)+';var t="'+type+'";d.forEach(function(x,i){var id=x["ID '+(type==="buku"?"BUKU":"ANGGOTA")+'"]||x.id||"";var n=t==="buku"?(x["JUDUL BUKU"]||""):(x["NAMA LENGKAP"]||"");document.getElementById("c").innerHTML+=\'<div class="card"><b>\'+n+\'</b><svg id="p-\'+i+\'"></svg><b>\'+id+\'</b></div>\';try{JsBarcode("#p-"+i,id,{format:"CODE128",width:2,height:50,displayValue:false,margin:5})}catch(e){}});<\/script></body></html>');}
 function downloadBarcode(svgId,filename){const svg=document.getElementById(svgId);if(!svg)return;const clone=svg.cloneNode(true);clone.setAttribute('xmlns','http://www.w3.org/2000/svg');const canvas=document.createElement('canvas');const ctx=canvas.getContext('2d');const img=new Image();img.onload=function(){canvas.width=img.width;canvas.height=img.height;ctx.fillStyle='white';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(img,0,0);const a=document.createElement('a');a.download=filename+'.png';a.href=canvas.toDataURL('image/png');a.click();};img.src='data:image/svg+xml;base64,'+btoa(unescape(encodeURIComponent(new XMLSerializer().serializeToString(clone))));}
 
-// FILTER
-function filterBuku(){const kw=document.getElementById('searchBuku').value.toLowerCase();const f=cacheBuku.filter(b=>(b['ID BUKU']||'').toLowerCase().includes(kw)||(b['JUDUL BUKU']||'').toLowerCase().includes(kw)||(b['PENGARANG']||'').toLowerCase().includes(kw)||(b['PENERBIT']||'').toLowerCase().includes(kw));renderBukuFiltered(f);}
-function renderBukuFiltered(data){document.getElementById('tabelBuku').innerHTML=data.map((b,i)=>{const id=b['ID BUKU']||b.id||'';return`<tr><td><div style="display:flex;align-items:center;gap:8px;"><svg id="bc-buku-s-${i}"></svg><button class="btn btn-success" style="font-size:10px;" onclick="downloadBarcode('bc-buku-s-${i}','${id}')">Download</button></div></td><td>${id}</td><td>${b['JUDUL BUKU']||''}</td><td>${b['PENGARANG']||''}</td><td>${b['PENERBIT']||''}</td><td>${b['TAHUN']||''}</td><td><strong>${b['STOK']||0}</strong></td><td><button class="btn btn-warning" style="font-size:10px;" onclick="editBuku('${id}')">Edit</button></td></tr>`;}).join('');setTimeout(()=>data.forEach((b,i)=>{try{const s=document.getElementById(`bc-buku-s-${i}`);if(s)JsBarcode(s,b['ID BUKU']||b.id||'',{format:"CODE128",width:2,height:50,displayValue:true,fontSize:12,margin:8});}catch(e){}}),200);}
-function filterAnggota(){const kw=document.getElementById('searchAnggota').value.toLowerCase();const f=cacheAnggota.filter(a=>(a['ID ANGGOTA']||'').toLowerCase().includes(kw)||(a['NAMA LENGKAP']||'').toLowerCase().includes(kw)||(a['KELAS/JURUSAN']||'').toLowerCase().includes(kw));renderAnggotaFiltered(f);}
-function renderAnggotaFiltered(data){document.getElementById('tabelAnggota').innerHTML=data.map((a,i)=>{const id=a['ID ANGGOTA']||a.id||'';return`<tr><td><div style="display:flex;align-items:center;gap:8px;"><svg id="bc-anggota-s-${i}"></svg><button class="btn btn-success" style="font-size:10px;" onclick="downloadBarcode('bc-anggota-s-${i}','${id}')">Download</button></div></td><td>${id}</td><td>${a['NAMA LENGKAP']||''}</td><td>${a['KELAS/JURUSAN']||''}</td><td>${a['NO TELEPON']||''}</td><td><button class="btn btn-warning" style="font-size:10px;" onclick="editAnggota('${id}')">Edit</button></td></tr>`;}).join('');setTimeout(()=>data.forEach((a,i)=>{try{const s=document.getElementById(`bc-anggota-s-${i}`);if(s)JsBarcode(s,a['ID ANGGOTA']||a.id||'',{format:"CODE128",width:2,height:50,displayValue:true,fontSize:12,margin:8});}catch(e){}}),200);}
+// FILTER HISTORY
 function filterHistory(){const kw=document.getElementById('searchHistory').value.toLowerCase();const f=cacheTransaksi.filter(t=>(t['ID PINJAM']||'').toLowerCase().includes(kw)||(t['NAMA ANGGOTA']||'').toLowerCase().includes(kw)||(t['JUDUL BUKU']||'').toLowerCase().includes(kw)||(t['STATUS']||'').toLowerCase().includes(kw));renderHistoryFiltered(f);}
 function renderHistoryFiltered(data){document.getElementById('tabelHistory').innerHTML=data.map(t=>{let sc=t['STATUS']==='Dikembalikan'?'badge-kembali':(t['STATUS']==='⚠️ Terlambat'?'badge-terlambat':'badge-pinjam');return`<tr><td><strong>${t['ID PINJAM']||''}</strong></td><td>${formatTanggalJam(t['TANGGAL PINJAM'])}</td><td>${t['NAMA ANGGOTA']||''}</td><td>${t['JUDUL BUKU']||''}</td><td>${formatTanggal(t['TANGGAL KEMBALI'])}</td><td>${t['TANGGAL DIKEMBALIKAN']?formatTanggalJam(t['TANGGAL DIKEMBALIKAN']):'-'}</td><td><span class="badge ${sc}">${t['STATUS']||''}</span></td><td><button class="btn btn-danger" style="font-size:10px;" onclick="hapusHistory('${t['ID PINJAM']}')">Hapus</button></td></tr>`;}).join('');}
 
 loadDashboard();
-setInterval(()=>{if(document.getElementById('mainSystem').style.display==='block'){const ap=document.querySelector('.page.active');if(ap&&ap.id==='dashboard')loadDashboard();}},30000);
+setInterval(()=>{if(document.getElementById('mainSystem').style.display==='block'){const ap=document.querySelector('.page.active');if(ap&&ap.id==='dashboard')loadDashboard();}},10000);
 </script>
 </body>
 </html>
